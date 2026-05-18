@@ -34,7 +34,7 @@ export default async function PluginConnectPage({ searchParams }: PluginConnectP
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-6 text-[#5c6268]">
               This creates a short-lived connection token for the Figma plugin.
-              In the next plugin step, Figma will open this page and capture the token automatically.
+              Create the token here, then paste it back into the plugin to finish connecting.
             </p>
           </div>
 
@@ -48,7 +48,7 @@ export default async function PluginConnectPage({ searchParams }: PluginConnectP
               <p className="font-semibold text-[#24703d]">Connection token created</p>
               <p className="text-sm leading-6 text-[#315f3f]">
                 This token expires {expiresAt ? expiresAt.toLocaleString() : "soon"}.
-                For now, keep this page open; the Figma plugin exchange step comes next.
+                Copy it into the plugin connection panel before it expires.
               </p>
               <code className="overflow-auto rounded-md bg-white p-3 text-xs text-[#15171a]">
                 {params.token}

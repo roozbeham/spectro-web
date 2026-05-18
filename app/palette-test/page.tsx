@@ -49,9 +49,24 @@ export default function PaletteTestPage() {
   }
 
   useEffect(() => {
-    loadSavedPalettes().catch(() => {
-      setSavedPalettes([]);
-    });
+    let isMounted = true;
+
+    fetch("/api/v1/palettes")
+      .then((response) => response.json() as Promise<PaletteListResponse>)
+      .then((data) => {
+        if (isMounted) {
+          setSavedPalettes(data.palettes);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setSavedPalettes([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   async function generatePalette(nextSeedHex = seedHex) {
