@@ -52,6 +52,7 @@ export type GeneratePaletteResponse = {
 };
 
 export type SavedPalette = GeneratedPalette & {
+  userId?: string;
   createdAt: string;
   updatedAt: string;
 };

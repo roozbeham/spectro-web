@@ -59,6 +59,10 @@ Without those env vars, the API falls back to local development storage:
 x-spectro-storage: local
 ```
 
+After user-owned palette saving works, run `supabase/palette-rls.sql` in the
+Supabase SQL editor. That enables user-level read/write policies for the
+`palettes` table.
+
 ## Palette API Contract
 
 Endpoint:

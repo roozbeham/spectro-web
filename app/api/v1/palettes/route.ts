@@ -8,6 +8,8 @@ import {
   listPalettes,
   saveGeneratedPalette,
 } from "@/lib/storage/palette-repository";
+import { createClient } from "@/lib/supabase/server";
+import { hasSupabaseAuthConfig } from "@/lib/supabase/env";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,8 +18,9 @@ const corsHeaders = {
 };
 
 export async function GET() {
+  const userId = await getCurrentUserId();
   const response: PaletteListResponse = {
-    palettes: await listPalettes(),
+    palettes: await listPalettes(userId),
   };
 
   return Response.json(response, {
@@ -37,6 +40,7 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
+    const userId = await getCurrentUserId();
     const body = await request.json() as SavePaletteRequest;
 
     if (!body.palette) {
@@ -49,7 +53,7 @@ export async function POST(request: Request) {
     }
 
     const response: SavePaletteResponse = {
-      palette: await saveGeneratedPalette(body.palette, body.name),
+      palette: await saveGeneratedPalette(body.palette, body.name, userId),
     };
 
     return Response.json(response, {
@@ -67,4 +71,14 @@ export async function POST(request: Request) {
       headers: corsHeaders,
     });
   }
+}
+
+async function getCurrentUserId(): Promise<string | undefined> {
+  if (!hasSupabaseAuthConfig()) {
+    return undefined;
+  }
+
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  return data.user?.id;
 }

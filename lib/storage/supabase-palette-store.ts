@@ -8,6 +8,7 @@ import {
 
 type SupabasePaletteRow = {
   id: string;
+  user_id: string | null;
   name: string;
   seed_hex: string;
   mode: PaletteMode;
@@ -21,6 +22,7 @@ type SupabasePaletteRow = {
 };
 
 type SupabasePaletteInsert = {
+  user_id?: string;
   name: string;
   seed_hex: string;
   mode: PaletteMode;
@@ -80,6 +82,7 @@ async function requestSupabase<T>(path: string, init: RequestInit = {}): Promise
 function toSavedPalette(row: SupabasePaletteRow): SavedPalette {
   return {
     id: row.id,
+    userId: row.user_id || undefined,
     name: row.name,
     seedHex: row.seed_hex,
     mode: row.mode,
@@ -93,7 +96,7 @@ function toSavedPalette(row: SupabasePaletteRow): SavedPalette {
   };
 }
 
-function toPaletteInsert(palette: GeneratedPalette, name?: string): SupabasePaletteInsert {
+function toPaletteInsert(palette: GeneratedPalette, name?: string, userId?: string): SupabasePaletteInsert {
   const colors = (Array.isArray(palette.colors) ? palette.colors : [])
     .map((color) => normalizeHex(color))
     .filter(Boolean);
@@ -103,6 +106,7 @@ function toPaletteInsert(palette: GeneratedPalette, name?: string): SupabasePale
   }
 
   return {
+    user_id: userId,
     name: String(name || palette.name || "Untitled Palette").trim() || "Untitled Palette",
     seed_hex: normalizeHex(palette.seedHex) || colors[Math.floor(colors.length / 2)] || colors[0],
     mode: palette.mode,
@@ -119,21 +123,24 @@ function toPaletteInsert(palette: GeneratedPalette, name?: string): SupabasePale
   };
 }
 
-export async function listSupabasePalettes(): Promise<SavedPalette[]> {
+export async function listSupabasePalettes(userId?: string): Promise<SavedPalette[]> {
+  const query = userId
+    ? `palettes?select=*&user_id=eq.${encodeURIComponent(userId)}&order=updated_at.desc`
+    : "palettes?select=*&order=updated_at.desc";
   const rows = await requestSupabase<SupabasePaletteRow[]>(
-    "palettes?select=*&order=updated_at.desc",
+    query,
   );
 
   return rows.map(toSavedPalette);
 }
 
-export async function saveSupabasePalette(palette: GeneratedPalette, name?: string): Promise<SavedPalette> {
+export async function saveSupabasePalette(palette: GeneratedPalette, name?: string, userId?: string): Promise<SavedPalette> {
   const rows = await requestSupabase<SupabasePaletteRow[]>("palettes", {
     method: "POST",
     headers: {
       Prefer: "return=representation",
     },
-    body: JSON.stringify(toPaletteInsert(palette, name)),
+    body: JSON.stringify(toPaletteInsert(palette, name, userId)),
   });
 
   if (!rows[0]) {

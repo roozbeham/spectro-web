@@ -15,14 +15,14 @@ export function getPaletteStorageDriver(): "local" | "supabase" {
   return useSupabaseStorage() ? "supabase" : "local";
 }
 
-export async function listPalettes(): Promise<SavedPalette[]> {
+export async function listPalettes(userId?: string): Promise<SavedPalette[]> {
   return useSupabaseStorage()
-    ? await listSupabasePalettes()
+    ? await listSupabasePalettes(userId)
     : await listSavedPalettes();
 }
 
-export async function saveGeneratedPalette(palette: GeneratedPalette, name?: string): Promise<SavedPalette> {
+export async function saveGeneratedPalette(palette: GeneratedPalette, name?: string, userId?: string): Promise<SavedPalette> {
   return useSupabaseStorage()
-    ? await saveSupabasePalette(palette, name)
+    ? await saveSupabasePalette(palette, name, userId)
     : await savePalette(palette, name);
 }
