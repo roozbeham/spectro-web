@@ -3,7 +3,11 @@ import type {
   SavePaletteRequest,
   SavePaletteResponse,
 } from "@/lib/contracts/palette";
-import { listSavedPalettes, savePalette } from "@/lib/storage/palette-store";
+import {
+  getPaletteStorageDriver,
+  listPalettes,
+  saveGeneratedPalette,
+} from "@/lib/storage/palette-repository";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,10 +17,15 @@ const corsHeaders = {
 
 export async function GET() {
   const response: PaletteListResponse = {
-    palettes: await listSavedPalettes(),
+    palettes: await listPalettes(),
   };
 
-  return Response.json(response, { headers: corsHeaders });
+  return Response.json(response, {
+    headers: {
+      ...corsHeaders,
+      "x-spectro-storage": getPaletteStorageDriver(),
+    },
+  });
 }
 
 export async function OPTIONS() {
@@ -40,12 +49,15 @@ export async function POST(request: Request) {
     }
 
     const response: SavePaletteResponse = {
-      palette: await savePalette(body.palette, body.name),
+      palette: await saveGeneratedPalette(body.palette, body.name),
     };
 
     return Response.json(response, {
       status: 201,
-      headers: corsHeaders,
+      headers: {
+        ...corsHeaders,
+        "x-spectro-storage": getPaletteStorageDriver(),
+      },
     });
   } catch (error) {
     return Response.json({
