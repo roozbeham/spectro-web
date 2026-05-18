@@ -1,3 +1,10 @@
+drop policy if exists "Users can read their own palettes" on public.palettes;
+drop policy if exists "Users can create their own palettes" on public.palettes;
+drop policy if exists "Users can update their own palettes" on public.palettes;
+drop policy if exists "Users can delete their own palettes" on public.palettes;
+
+alter table public.palettes enable row level security;
+
 create policy "Users can read their own palettes"
 on public.palettes
 for select
