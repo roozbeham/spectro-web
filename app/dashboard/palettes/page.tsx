@@ -1,0 +1,73 @@
+import Link from "next/link";
+import { getPaletteStorageDriver, listPalettes } from "@/lib/storage/palette-repository";
+
+export const dynamic = "force-dynamic";
+
+export default async function DashboardPalettesPage() {
+  const palettes = await listPalettes();
+  const storageDriver = getPaletteStorageDriver();
+
+  return (
+    <div className="grid gap-6">
+      <section className="flex flex-col gap-4 rounded-lg border border-[#d5dde2] bg-white p-6 shadow-sm sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-medium uppercase text-[#697177]">
+            Palettes
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold sm:text-5xl">
+            Saved palettes
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#5c6268]">
+            Reading from {storageDriver} storage. New palettes saved from the API test
+            page appear here.
+          </p>
+        </div>
+        <Link className="flex h-11 items-center justify-center rounded-md bg-[#15171a] px-4 text-sm font-semibold text-white transition hover:bg-[#2d3338]" href="/palette-test">
+          Generate palette
+        </Link>
+      </section>
+
+      {palettes.length ? (
+        <section className="grid gap-4">
+          {palettes.map((palette) => (
+            <article className="grid gap-4 rounded-lg border border-[#d5dde2] bg-white p-4 shadow-sm" key={palette.id}>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold">{palette.name}</h2>
+                  <p className="mt-1 text-sm text-[#5c6268]">
+                    {palette.mode} · {palette.seedHex} · {palette.colors.length} colors
+                  </p>
+                </div>
+                <p className="text-sm text-[#697177]">
+                  {new Date(palette.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+
+              <div className="grid min-h-20 overflow-hidden rounded-md border border-[#d5dde2]" style={{
+                gridTemplateColumns: `repeat(${palette.colors.length}, minmax(0, 1fr))`,
+              }}>
+                {palette.colors.map((color, index) => (
+                  <div className="min-h-20" key={`${palette.id}-${color}-${index}`} style={{ backgroundColor: color }} />
+                ))}
+              </div>
+            </article>
+          ))}
+        </section>
+      ) : (
+        <section className="rounded-lg border border-dashed border-[#b9c0c7] bg-white p-10 text-center">
+          <h2 className="text-xl font-semibold">No palettes yet</h2>
+          <p className="mt-2 text-sm text-[#5c6268]">
+            Generate and save a palette to create your first dashboard record.
+          </p>
+          <Link className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-[#15171a] px-4 text-sm font-semibold text-white transition hover:bg-[#2d3338]" href="/palette-test">
+            Generate palette
+          </Link>
+        </section>
+      )}
+    </div>
+  );
+}
