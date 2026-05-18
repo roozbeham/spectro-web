@@ -51,6 +51,24 @@ export type GeneratePaletteResponse = {
   palette: GeneratedPalette;
 };
 
+export type SavedPalette = GeneratedPalette & {
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SavePaletteRequest = {
+  name?: string;
+  palette?: GeneratedPalette;
+};
+
+export type PaletteListResponse = {
+  palettes: SavedPalette[];
+};
+
+export type SavePaletteResponse = {
+  palette: SavedPalette;
+};
+
 export function normalizeHex(value: unknown): string {
   const normalized = String(value || "").trim().replace(/^#/, "").toUpperCase();
 
