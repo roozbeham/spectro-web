@@ -12,6 +12,7 @@ import {
   duplicatePaletteAction,
   renamePaletteAction,
 } from "@/app/dashboard/palettes/actions";
+import { ExportBlock } from "@/app/dashboard/palettes/[id]/export-block";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,10 @@ export default async function PaletteDetailPage({ params }: PaletteDetailPagePro
   const cssExport = createCssVariablesExport(palette);
   const jsonExport = createJsonExport(palette);
   const tailwindExport = createTailwindExport(palette);
+  const filename = palette.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "palette";
 
   return (
     <div className="grid gap-6">
@@ -102,27 +107,25 @@ export default async function PaletteDetailPage({ params }: PaletteDetailPagePro
       </section>
 
       <section className="grid gap-4 lg:grid-cols-3">
-        <ExportBlock label="CSS variables" value={cssExport} />
-        <ExportBlock label="JSON" value={jsonExport} />
-        <ExportBlock label="Tailwind config" value={tailwindExport} />
+        <ExportBlock
+          filename={`${filename}-variables.css`}
+          label="CSS variables"
+          mimeType="text/css"
+          value={cssExport}
+        />
+        <ExportBlock
+          filename={`${filename}.json`}
+          label="JSON"
+          mimeType="application/json"
+          value={jsonExport}
+        />
+        <ExportBlock
+          filename={`${filename}-tailwind.config.ts`}
+          label="Tailwind config"
+          mimeType="text/typescript"
+          value={tailwindExport}
+        />
       </section>
     </div>
-  );
-}
-
-function ExportBlock({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <article className="grid gap-3 rounded-lg border border-[#d5dde2] bg-white p-4 shadow-sm">
-      <h2 className="font-semibold">{label}</h2>
-      <pre className="max-h-80 overflow-auto rounded-md bg-[#111418] p-4 text-xs leading-5 text-[#eef4f6]">
-        <code>{value}</code>
-      </pre>
-    </article>
   );
 }
