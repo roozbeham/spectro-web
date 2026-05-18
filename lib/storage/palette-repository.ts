@@ -1,8 +1,17 @@
 import type { GeneratedPalette, SavedPalette } from "@/lib/contracts/palette";
-import { listSavedPalettes, savePalette } from "@/lib/storage/palette-store";
 import {
+  deleteSavedPalette,
+  duplicateSavedPalette,
+  listSavedPalettes,
+  renameSavedPalette,
+  savePalette,
+} from "@/lib/storage/palette-store";
+import {
+  deleteSupabasePalette,
+  duplicateSupabasePalette,
   hasSupabasePaletteStorageConfig,
   listSupabasePalettes,
+  renameSupabasePalette,
   saveSupabasePalette,
 } from "@/lib/storage/supabase-palette-store";
 
@@ -25,4 +34,22 @@ export async function saveGeneratedPalette(palette: GeneratedPalette, name?: str
   return useSupabaseStorage()
     ? await saveSupabasePalette(palette, name, userId)
     : await savePalette(palette, name);
+}
+
+export async function renamePalette(id: string, name: string, userId?: string): Promise<SavedPalette> {
+  return useSupabaseStorage()
+    ? await renameSupabasePalette(id, name, userId)
+    : await renameSavedPalette(id, name);
+}
+
+export async function deletePalette(id: string, userId?: string): Promise<void> {
+  return useSupabaseStorage()
+    ? await deleteSupabasePalette(id, userId)
+    : await deleteSavedPalette(id);
+}
+
+export async function duplicatePalette(id: string, userId?: string): Promise<SavedPalette> {
+  return useSupabaseStorage()
+    ? await duplicateSupabasePalette(id, userId)
+    : await duplicateSavedPalette(id);
 }

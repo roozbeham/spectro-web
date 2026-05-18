@@ -149,3 +149,51 @@ export async function saveSupabasePalette(palette: GeneratedPalette, name?: stri
 
   return toSavedPalette(rows[0]);
 }
+
+export async function renameSupabasePalette(id: string, name: string, userId?: string): Promise<SavedPalette> {
+  const query = userId
+    ? `palettes?id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}`
+    : `palettes?id=eq.${encodeURIComponent(id)}`;
+  const rows = await requestSupabase<SupabasePaletteRow[]>(query, {
+    method: "PATCH",
+    headers: {
+      Prefer: "return=representation",
+    },
+    body: JSON.stringify({
+      name: name.trim(),
+    }),
+  });
+
+  if (!rows[0]) {
+    throw new Error("Palette was not found.");
+  }
+
+  return toSavedPalette(rows[0]);
+}
+
+export async function deleteSupabasePalette(id: string, userId?: string): Promise<void> {
+  const query = userId
+    ? `palettes?id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}`
+    : `palettes?id=eq.${encodeURIComponent(id)}`;
+
+  await requestSupabase<null>(query, {
+    method: "DELETE",
+    headers: {
+      Prefer: "return=minimal",
+    },
+  });
+}
+
+export async function duplicateSupabasePalette(id: string, userId?: string): Promise<SavedPalette> {
+  const query = userId
+    ? `palettes?select=*&id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`
+    : `palettes?select=*&id=eq.${encodeURIComponent(id)}&limit=1`;
+  const rows = await requestSupabase<SupabasePaletteRow[]>(query);
+  const palette = rows[0];
+
+  if (!palette) {
+    throw new Error("Palette was not found.");
+  }
+
+  return await saveSupabasePalette(toSavedPalette(palette), `${palette.name} Copy`, userId);
+}

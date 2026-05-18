@@ -84,3 +84,46 @@ export async function savePalette(palette: GeneratedPalette, name?: string): Pro
 
   return savedPalette;
 }
+
+export async function renameSavedPalette(id: string, name: string): Promise<SavedPalette> {
+  const store = await readStore();
+  const palette = store.palettes.find((item) => item.id === id);
+
+  if (!palette) {
+    throw new Error("Palette was not found.");
+  }
+
+  palette.name = name.trim() || palette.name;
+  palette.updatedAt = new Date().toISOString();
+  await writeStore(store);
+
+  return palette;
+}
+
+export async function deleteSavedPalette(id: string): Promise<void> {
+  const store = await readStore();
+  store.palettes = store.palettes.filter((palette) => palette.id !== id);
+  await writeStore(store);
+}
+
+export async function duplicateSavedPalette(id: string): Promise<SavedPalette> {
+  const store = await readStore();
+  const palette = store.palettes.find((item) => item.id === id);
+
+  if (!palette) {
+    throw new Error("Palette was not found.");
+  }
+
+  const now = new Date().toISOString();
+  const duplicate: SavedPalette = {
+    ...palette,
+    id: randomUUID(),
+    name: `${palette.name} Copy`,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  store.palettes.unshift(duplicate);
+  await writeStore(store);
+  return duplicate;
+}

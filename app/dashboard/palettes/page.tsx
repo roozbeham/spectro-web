@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { getPaletteStorageDriver, listPalettes } from "@/lib/storage/palette-repository";
 import { createClient } from "@/lib/supabase/server";
+import {
+  deletePaletteAction,
+  duplicatePaletteAction,
+  renamePaletteAction,
+} from "@/app/dashboard/palettes/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +61,39 @@ export default async function DashboardPalettesPage() {
                 {palette.colors.map((color, index) => (
                   <div className="min-h-20" key={`${palette.id}-${color}-${index}`} style={{ backgroundColor: color }} />
                 ))}
+              </div>
+
+              <div className="grid gap-3 border-t border-[#edf1f3] pt-4 lg:grid-cols-[1fr_auto] lg:items-center">
+                <form action={renamePaletteAction} className="grid gap-2 sm:grid-cols-[1fr_auto]">
+                  <input name="paletteId" type="hidden" value={palette.id} />
+                  <label className="sr-only" htmlFor={`rename-${palette.id}`}>
+                    Palette name
+                  </label>
+                  <input
+                    className="h-10 rounded-md border border-[#b9c0c7] px-3 text-sm outline-none transition focus:border-[#2374ab] focus:ring-4 focus:ring-[#35ade9]/20"
+                    defaultValue={palette.name}
+                    id={`rename-${palette.id}`}
+                    name="name"
+                  />
+                  <button className="h-10 rounded-md border border-[#15171a] px-4 text-sm font-semibold transition hover:bg-[#15171a] hover:text-white" type="submit">
+                    Rename
+                  </button>
+                </form>
+
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <form action={duplicatePaletteAction}>
+                    <input name="paletteId" type="hidden" value={palette.id} />
+                    <button className="h-10 w-full rounded-md border border-[#b9c0c7] px-4 text-sm font-semibold transition hover:border-[#15171a] sm:w-auto" type="submit">
+                      Duplicate
+                    </button>
+                  </form>
+                  <form action={deletePaletteAction}>
+                    <input name="paletteId" type="hidden" value={palette.id} />
+                    <button className="h-10 w-full rounded-md border border-[#d64f4f] px-4 text-sm font-semibold text-[#9f2727] transition hover:bg-[#fff1f1] sm:w-auto" type="submit">
+                      Delete
+                    </button>
+                  </form>
+                </div>
               </div>
             </article>
           ))}

@@ -8,8 +8,7 @@ import {
   listPalettes,
   saveGeneratedPalette,
 } from "@/lib/storage/palette-repository";
-import { createClient } from "@/lib/supabase/server";
-import { hasSupabaseAuthConfig } from "@/lib/supabase/env";
+import { getCurrentUserId } from "@/lib/auth/current-user";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -71,14 +70,4 @@ export async function POST(request: Request) {
       headers: corsHeaders,
     });
   }
-}
-
-async function getCurrentUserId(): Promise<string | undefined> {
-  if (!hasSupabaseAuthConfig()) {
-    return undefined;
-  }
-
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  return data.user?.id;
 }
