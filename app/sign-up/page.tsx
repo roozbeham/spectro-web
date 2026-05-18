@@ -1,6 +1,15 @@
 import Link from "next/link";
+import { signUp } from "@/app/auth/actions";
 
-export default function SignUpPage() {
+type SignUpPageProps = {
+  searchParams: Promise<{
+    error?: string;
+  }>;
+};
+
+export default async function SignUpPage({ searchParams }: SignUpPageProps) {
+  const params = await searchParams;
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f4f7f8] px-6 py-10 text-[#15171a]">
       <section className="grid w-full max-w-5xl overflow-hidden rounded-lg border border-[#d5dde2] bg-white shadow-sm lg:grid-cols-[1fr_420px]">
@@ -32,7 +41,13 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          <form className="grid gap-4">
+          {params.error ? (
+            <p className="mb-4 rounded-md border border-[#d64f4f] bg-[#fff1f1] px-4 py-3 text-sm font-medium text-[#9f2727]">
+              {params.error}
+            </p>
+          ) : null}
+
+          <form action={signUp} className="grid gap-4">
             <label className="grid gap-2 text-sm font-medium text-[#343a40]">
               Email
               <input
@@ -52,7 +67,7 @@ export default function SignUpPage() {
             </label>
             <button
               className="mt-2 h-12 rounded-md bg-[#15171a] px-5 text-sm font-semibold text-white transition hover:bg-[#2d3338]"
-              type="button"
+              type="submit"
             >
               Create account
             </button>

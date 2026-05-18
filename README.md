@@ -35,12 +35,16 @@ Supabase:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL="https://your-project-ref.supabase.co"
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="your-publishable-or-anon-key"
 SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 PALETTE_STORAGE_DRIVER="supabase"
 ```
 
 Use the service role key only on the server. Do not expose it in plugin or
 browser code.
+
+Supabase Auth also needs the public publishable or anon key. In the Supabase
+dashboard this is under Project Settings -> API -> Project API keys.
 
 When Supabase storage is active, `GET /api/v1/palettes` and
 `POST /api/v1/palettes` include this response header:
