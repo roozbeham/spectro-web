@@ -70,6 +70,11 @@ export async function listSavedPalettes(): Promise<SavedPalette[]> {
   ));
 }
 
+export async function getSavedPalette(id: string): Promise<SavedPalette | null> {
+  const store = await readStore();
+  return store.palettes.find((palette) => palette.id === id) || null;
+}
+
 export async function savePalette(palette: GeneratedPalette, name?: string): Promise<SavedPalette> {
   const store = await readStore();
   const now = new Date().toISOString();

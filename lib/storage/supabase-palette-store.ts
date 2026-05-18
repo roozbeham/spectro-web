@@ -134,6 +134,15 @@ export async function listSupabasePalettes(userId?: string): Promise<SavedPalett
   return rows.map(toSavedPalette);
 }
 
+export async function getSupabasePalette(id: string, userId?: string): Promise<SavedPalette | null> {
+  const query = userId
+    ? `palettes?select=*&id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`
+    : `palettes?select=*&id=eq.${encodeURIComponent(id)}&limit=1`;
+  const rows = await requestSupabase<SupabasePaletteRow[]>(query);
+
+  return rows[0] ? toSavedPalette(rows[0]) : null;
+}
+
 export async function saveSupabasePalette(palette: GeneratedPalette, name?: string, userId?: string): Promise<SavedPalette> {
   const rows = await requestSupabase<SupabasePaletteRow[]>("palettes", {
     method: "POST",

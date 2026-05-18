@@ -2,6 +2,7 @@ import type { GeneratedPalette, SavedPalette } from "@/lib/contracts/palette";
 import {
   deleteSavedPalette,
   duplicateSavedPalette,
+  getSavedPalette,
   listSavedPalettes,
   renameSavedPalette,
   savePalette,
@@ -9,6 +10,7 @@ import {
 import {
   deleteSupabasePalette,
   duplicateSupabasePalette,
+  getSupabasePalette,
   hasSupabasePaletteStorageConfig,
   listSupabasePalettes,
   renameSupabasePalette,
@@ -28,6 +30,12 @@ export async function listPalettes(userId?: string): Promise<SavedPalette[]> {
   return useSupabaseStorage()
     ? await listSupabasePalettes(userId)
     : await listSavedPalettes();
+}
+
+export async function getPalette(id: string, userId?: string): Promise<SavedPalette | null> {
+  return useSupabaseStorage()
+    ? await getSupabasePalette(id, userId)
+    : await getSavedPalette(id);
 }
 
 export async function saveGeneratedPalette(palette: GeneratedPalette, name?: string, userId?: string): Promise<SavedPalette> {

@@ -45,6 +45,9 @@ export default async function DashboardPalettesPage() {
                   <p className="mt-1 text-sm text-[#5c6268]">
                     {palette.mode} · {palette.seedHex} · {palette.colors.length} colors
                   </p>
+                  <Link className="mt-3 inline-flex text-sm font-semibold text-[#15171a]" href={`/dashboard/palettes/${palette.id}`}>
+                    Open palette
+                  </Link>
                 </div>
                 <p className="text-sm text-[#697177]">
                   {new Date(palette.createdAt).toLocaleDateString("en-US", {

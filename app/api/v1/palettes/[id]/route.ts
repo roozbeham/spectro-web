@@ -2,13 +2,14 @@ import type { SavePaletteResponse } from "@/lib/contracts/palette";
 import { getCurrentUserId } from "@/lib/auth/current-user";
 import {
   deletePalette,
+  getPalette,
   getPaletteStorageDriver,
   renamePalette,
 } from "@/lib/storage/palette-repository";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "PATCH, DELETE, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, PATCH, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
@@ -22,6 +23,30 @@ export async function OPTIONS() {
   return new Response(null, {
     status: 204,
     headers: corsHeaders,
+  });
+}
+
+export async function GET(_request: Request, context: RouteContext) {
+  const { id } = await context.params;
+  const userId = await getCurrentUserId();
+  const palette = await getPalette(id, userId);
+
+  if (!palette) {
+    return Response.json({
+      error: "Palette was not found.",
+    }, {
+      status: 404,
+      headers: corsHeaders,
+    });
+  }
+
+  return Response.json({
+    palette,
+  }, {
+    headers: {
+      ...corsHeaders,
+      "x-spectro-storage": getPaletteStorageDriver(),
+    },
   });
 }
 
