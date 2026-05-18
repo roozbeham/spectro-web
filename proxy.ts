@@ -37,12 +37,15 @@ export async function proxy(request: NextRequest) {
 
   const { data } = await supabase.auth.getUser();
   const isDashboardRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  const isPluginConnectRoute = request.nextUrl.pathname === "/plugin/connect";
   const isAuthRoute = request.nextUrl.pathname === "/sign-in" || request.nextUrl.pathname === "/sign-up";
 
-  if (!data.user && isDashboardRoute) {
+  if (!data.user && (isDashboardRoute || isPluginConnectRoute)) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/sign-in";
-    redirectUrl.searchParams.set("message", "Please sign in to open your dashboard.");
+    redirectUrl.searchParams.set("message", isPluginConnectRoute
+      ? "Please sign in to connect the Figma plugin."
+      : "Please sign in to open your dashboard.");
     return NextResponse.redirect(redirectUrl);
   }
 

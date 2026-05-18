@@ -5,6 +5,10 @@ import {
   type PaletteSource,
   type SavedPalette,
 } from "@/lib/contracts/palette";
+import {
+  hasSupabaseAdminConfig,
+  requestSupabaseAdmin,
+} from "@/lib/supabase/admin-rest";
 
 type SupabasePaletteRow = {
   id: string;
@@ -33,50 +37,8 @@ type SupabasePaletteInsert = {
   source: PaletteSource;
 };
 
-function getSupabaseConfig() {
-  return {
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
-  };
-}
-
 export function hasSupabasePaletteStorageConfig(): boolean {
-  const config = getSupabaseConfig();
-  return Boolean(config.url && config.serviceRoleKey);
-}
-
-function getSupabaseRestUrl(path: string): string {
-  const { url } = getSupabaseConfig();
-  return `${url.replace(/\/$/, "")}/rest/v1/${path.replace(/^\//, "")}`;
-}
-
-async function requestSupabase<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const { serviceRoleKey } = getSupabaseConfig();
-
-  if (!hasSupabasePaletteStorageConfig()) {
-    throw new Error("Supabase palette storage is not configured.");
-  }
-
-  const response = await fetch(getSupabaseRestUrl(path), {
-    ...init,
-    headers: {
-      apikey: serviceRoleKey,
-      Authorization: `Bearer ${serviceRoleKey}`,
-      "Content-Type": "application/json",
-      ...(init.headers || {}),
-    },
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Supabase request failed.");
-  }
-
-  if (response.status === 204) {
-    return null as T;
-  }
-
-  return await response.json() as T;
+  return hasSupabaseAdminConfig();
 }
 
 function toSavedPalette(row: SupabasePaletteRow): SavedPalette {
@@ -127,7 +89,7 @@ export async function listSupabasePalettes(userId?: string): Promise<SavedPalett
   const query = userId
     ? `palettes?select=*&user_id=eq.${encodeURIComponent(userId)}&order=updated_at.desc`
     : "palettes?select=*&order=updated_at.desc";
-  const rows = await requestSupabase<SupabasePaletteRow[]>(
+  const rows = await requestSupabaseAdmin<SupabasePaletteRow[]>(
     query,
   );
 
@@ -138,13 +100,13 @@ export async function getSupabasePalette(id: string, userId?: string): Promise<S
   const query = userId
     ? `palettes?select=*&id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`
     : `palettes?select=*&id=eq.${encodeURIComponent(id)}&limit=1`;
-  const rows = await requestSupabase<SupabasePaletteRow[]>(query);
+  const rows = await requestSupabaseAdmin<SupabasePaletteRow[]>(query);
 
   return rows[0] ? toSavedPalette(rows[0]) : null;
 }
 
 export async function saveSupabasePalette(palette: GeneratedPalette, name?: string, userId?: string): Promise<SavedPalette> {
-  const rows = await requestSupabase<SupabasePaletteRow[]>("palettes", {
+  const rows = await requestSupabaseAdmin<SupabasePaletteRow[]>("palettes", {
     method: "POST",
     headers: {
       Prefer: "return=representation",
@@ -163,7 +125,7 @@ export async function renameSupabasePalette(id: string, name: string, userId?: s
   const query = userId
     ? `palettes?id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}`
     : `palettes?id=eq.${encodeURIComponent(id)}`;
-  const rows = await requestSupabase<SupabasePaletteRow[]>(query, {
+  const rows = await requestSupabaseAdmin<SupabasePaletteRow[]>(query, {
     method: "PATCH",
     headers: {
       Prefer: "return=representation",
@@ -185,7 +147,7 @@ export async function deleteSupabasePalette(id: string, userId?: string): Promis
     ? `palettes?id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}`
     : `palettes?id=eq.${encodeURIComponent(id)}`;
 
-  await requestSupabase<null>(query, {
+  await requestSupabaseAdmin<null>(query, {
     method: "DELETE",
     headers: {
       Prefer: "return=minimal",
@@ -197,7 +159,7 @@ export async function duplicateSupabasePalette(id: string, userId?: string): Pro
   const query = userId
     ? `palettes?select=*&id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`
     : `palettes?select=*&id=eq.${encodeURIComponent(id)}&limit=1`;
-  const rows = await requestSupabase<SupabasePaletteRow[]>(query);
+  const rows = await requestSupabaseAdmin<SupabasePaletteRow[]>(query);
   const palette = rows[0];
 
   if (!palette) {

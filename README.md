@@ -63,6 +63,10 @@ After user-owned palette saving works, run `supabase/palette-rls.sql` in the
 Supabase SQL editor. That enables user-level read/write policies for the
 `palettes` table.
 
+To prepare Figma plugin account connection, run
+`supabase/plugin-connections.sql` in the Supabase SQL editor. That creates the
+short-lived connection token table used by `/plugin/connect`.
+
 ## Palette API Contract
 
 Endpoint:
