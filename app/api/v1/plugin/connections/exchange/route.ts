@@ -5,6 +5,19 @@ type PluginConnectionExchangeBody = {
   figmaUserId?: unknown;
 };
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json() as PluginConnectionExchangeBody;
@@ -17,12 +30,15 @@ export async function POST(request: Request) {
         ...exchanged.session,
         token: exchanged.token,
       },
+    }, {
+      headers: corsHeaders,
     });
   } catch (error) {
     return Response.json({
       error: error instanceof Error ? error.message : "Plugin connection could not be exchanged.",
     }, {
       status: 400,
+      headers: corsHeaders,
     });
   }
 }
