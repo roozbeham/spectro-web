@@ -5,11 +5,15 @@ type SignInPageProps = {
   searchParams: Promise<{
     error?: string;
     message?: string;
+    next?: string;
   }>;
 };
 
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = await searchParams;
+  const nextPath = params.next && params.next.startsWith("/") && !params.next.startsWith("//")
+    ? params.next
+    : "/plugin/connect";
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f4f7f8] px-6 py-10 text-[#15171a]">
@@ -55,6 +59,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           ) : null}
 
           <form action={signIn} className="grid gap-4">
+            <input name="next" type="hidden" value={nextPath} />
             <label className="grid gap-2 text-sm font-medium text-[#343a40]">
               Email
               <input
@@ -82,7 +87,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
           <p className="mt-6 text-sm text-[#5c6268]">
             New to Spectro?{" "}
-            <Link className="font-semibold text-[#15171a]" href="/sign-up">
+            <Link className="font-semibold text-[#15171a]" href={`/sign-up?next=${encodeURIComponent(nextPath)}`}>
               Create an account
             </Link>
           </p>

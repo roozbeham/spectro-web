@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getSafeRedirectPath } from "@/lib/auth/admin-access";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseAuthConfig } from "@/lib/supabase/env";
 
@@ -24,6 +25,7 @@ export async function signIn(formData: FormData) {
 
   const email = getFormValue(formData, "email");
   const password = getFormValue(formData, "password");
+  const nextPath = getSafeRedirectPath(formData.get("next"));
 
   if (!email || !password) {
     redirectWithMessage("/sign-in", "error", "Enter your email and password.");
@@ -40,7 +42,7 @@ export async function signIn(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect(nextPath);
 }
 
 export async function signUp(formData: FormData) {
@@ -50,6 +52,7 @@ export async function signUp(formData: FormData) {
 
   const email = getFormValue(formData, "email");
   const password = getFormValue(formData, "password");
+  const nextPath = getSafeRedirectPath(formData.get("next"));
 
   if (!email || !password) {
     redirectWithMessage("/sign-up", "error", "Enter your email and password.");
@@ -66,7 +69,11 @@ export async function signUp(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirectWithMessage("/sign-in", "message", "Account created. Check your email if confirmation is enabled, then sign in.");
+  const searchParams = new URLSearchParams({
+    message: "Account created. Check your email if confirmation is enabled, then sign in.",
+    next: nextPath,
+  });
+  redirect(`/sign-in?${searchParams.toString()}`);
 }
 
 export async function signOut() {

@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
+import { isAdminEmail } from "@/lib/auth/admin-access";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseAuthConfig } from "@/lib/supabase/env";
 
@@ -8,9 +10,14 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const email = hasSupabaseAuthConfig()
-    ? (await (await createClient()).auth.getUser()).data.user?.email || "Signed in"
-    : "Supabase Auth setup pending";
+  const user = hasSupabaseAuthConfig()
+    ? (await (await createClient()).auth.getUser()).data.user
+    : null;
+  const email = user?.email || "Supabase Auth setup pending";
+
+  if (!isAdminEmail(user?.email)) {
+    notFound();
+  }
 
   return (
     <div className="min-h-screen bg-[#f4f7f8] text-[#15171a]">

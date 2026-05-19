@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { getSafeRedirectPath, isAdminEmail } from "@/lib/auth/admin-access";
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 export async function proxy(request: NextRequest) {
@@ -37,21 +38,35 @@ export async function proxy(request: NextRequest) {
 
   const { data } = await supabase.auth.getUser();
   const isDashboardRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  const isDevToolRoute = request.nextUrl.pathname === "/palette-test";
   const isPluginConnectRoute = request.nextUrl.pathname === "/plugin/connect";
   const isAuthRoute = request.nextUrl.pathname === "/sign-in" || request.nextUrl.pathname === "/sign-up";
+  const requiresUser = isDashboardRoute || isDevToolRoute || isPluginConnectRoute;
+  const requiresAdmin = isDashboardRoute || isDevToolRoute;
 
-  if (!data.user && (isDashboardRoute || isPluginConnectRoute)) {
+  if (!data.user && requiresUser) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/sign-in";
+    redirectUrl.searchParams.set("next", request.nextUrl.pathname);
     redirectUrl.searchParams.set("message", isPluginConnectRoute
       ? "Please sign in to connect the Figma plugin."
-      : "Please sign in to open your dashboard.");
+      : "Please sign in to continue.");
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (data.user && requiresAdmin && !isAdminEmail(data.user.email)) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/no-access";
+    redirectUrl.search = "";
     return NextResponse.redirect(redirectUrl);
   }
 
   if (data.user && isAuthRoute) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard";
+    redirectUrl.pathname = getSafeRedirectPath(
+      request.nextUrl.searchParams.get("next"),
+      isAdminEmail(data.user.email) ? "/dashboard" : "/plugin/connect",
+    );
     redirectUrl.search = "";
     return NextResponse.redirect(redirectUrl);
   }

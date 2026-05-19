@@ -28,14 +28,14 @@ export default function Home() {
             </h1>
             <p className="max-w-xl text-lg leading-8 text-[#5c6268]">
               Spectro Web is becoming the account hub for saved palettes, Figma sync,
-              exports, and protected cloud generation.
+              and protected cloud generation.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link className="flex h-12 items-center justify-center rounded-md bg-[#15171a] px-5 text-sm font-semibold text-white transition hover:bg-[#2d3338]" href="/dashboard">
-                Open dashboard
+              <Link className="flex h-12 items-center justify-center rounded-md bg-[#15171a] px-5 text-sm font-semibold text-white transition hover:bg-[#2d3338]" href="/plugin/connect">
+                Connect Figma plugin
               </Link>
-              <Link className="flex h-12 items-center justify-center rounded-md border border-[#b9c0c7] px-5 text-sm font-semibold transition hover:border-[#15171a]" href="/palette-test">
-                API test page
+              <Link className="flex h-12 items-center justify-center rounded-md border border-[#b9c0c7] px-5 text-sm font-semibold transition hover:border-[#15171a]" href="/sign-up?next=%2Fplugin%2Fconnect">
+                Create account
               </Link>
             </div>
           </div>
