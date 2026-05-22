@@ -9,6 +9,7 @@ export type GeneratePaletteRequest = {
   seedColor?: string;
   steps?: number;
   mode?: PaletteMode | string;
+  statusTheme?: "light" | "dark" | string;
   settings?: Record<string, unknown>;
   source?: PaletteSource | string;
 };

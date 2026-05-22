@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "node:crypto";
-import { requestSupabaseAdmin } from "@/lib/supabase/admin-rest";
+import { requestSupabaseAdmin, requestSupabaseAuthAdmin } from "@/lib/supabase/admin-rest";
 
 const PLUGIN_CONNECTION_TTL_MINUTES = 10;
 const PLUGIN_SESSION_TTL_DAYS = 30;
@@ -43,6 +43,7 @@ export type CreatedPluginConnection = {
 export type PluginSession = {
   id: string;
   userId: string;
+  userEmail?: string;
   createdAt: string;
   expiresAt: string;
   revokedAt?: string;
@@ -60,6 +61,15 @@ function hashToken(token: string): string {
 
 function createToken(prefix = "spc"): string {
   return `${prefix}_${randomBytes(32).toString("base64url")}`;
+}
+
+async function getUserEmail(userId: string): Promise<string | undefined> {
+  try {
+    const user = await requestSupabaseAuthAdmin<{ email?: string }>(`users/${encodeURIComponent(userId)}`);
+    return user.email || undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function toPluginConnection(row: PluginConnectionRow): PluginConnection {
@@ -171,8 +181,11 @@ export async function exchangePluginConnectionToken(
     throw new Error("Supabase did not return the plugin session.");
   }
 
+  const session = toPluginSession(sessionRows[0]);
+  session.userEmail = await getUserEmail(connection.user_id);
+
   return {
-    session: toPluginSession(sessionRows[0]),
+    session,
     token: sessionToken,
   };
 }
