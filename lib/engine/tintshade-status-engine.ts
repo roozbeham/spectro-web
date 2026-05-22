@@ -242,8 +242,8 @@ const TINT_SHADE_NEW_FAMILY_PROFILES = [
   { key: "violet", label: "Violet", targetHue: 293, oklch: [[0.969, 0.016, 293.756], [0.943, 0.029, 294.588], [0.894, 0.057, 293.283], [0.811, 0.111, 293.571], [0.702, 0.183, 293.541], [0.606, 0.250, 292.717], [0.541, 0.281, 293.009], [0.491, 0.270, 292.581], [0.432, 0.232, 292.759], [0.380, 0.189, 293.745], [0.283, 0.141, 291.089]] },
   { key: "indigo", label: "Indigo", targetHue: 277, oklch: [[0.962, 0.018, 272.314], [0.930, 0.034, 272.788], [0.870, 0.065, 274.039], [0.785, 0.115, 274.713], [0.673, 0.182, 276.935], [0.585, 0.233, 277.117], [0.511, 0.262, 276.966], [0.457, 0.240, 277.023], [0.398, 0.195, 277.366], [0.359, 0.144, 278.697], [0.257, 0.090, 281.288]] },
   { key: "blue", label: "Blue", targetHue: 260, statusRole: "info", oklch: [[0.970, 0.014, 254.604], [0.932, 0.032, 255.585], [0.882, 0.059, 254.128], [0.809, 0.105, 251.813], [0.707, 0.165, 254.624], [0.623, 0.214, 259.815], [0.546, 0.245, 262.881], [0.488, 0.243, 264.376], [0.424, 0.199, 265.638], [0.379, 0.146, 265.522], [0.282, 0.091, 267.935]] },
-  { key: "sky", label: "Sky", targetHue: 237, statusRole: "info", oklch: [[0.977, 0.013, 236.620], [0.951, 0.026, 236.824], [0.901, 0.058, 230.902], [0.828, 0.111, 230.318], [0.746, 0.160, 232.661], [0.685, 0.169, 237.323], [0.588, 0.158, 241.966], [0.500, 0.134, 242.749], [0.443, 0.110, 240.790], [0.391, 0.090, 240.876], [0.293, 0.066, 243.157]] },
-  { key: "cyan", label: "Cyan", targetHue: 215, statusRole: "info", oklch: [[0.984, 0.019, 200.873], [0.956, 0.045, 203.388], [0.917, 0.080, 205.041], [0.865, 0.127, 207.078], [0.789, 0.154, 211.530], [0.715, 0.143, 215.221], [0.609, 0.126, 221.723], [0.520, 0.105, 223.128], [0.450, 0.085, 224.283], [0.398, 0.070, 227.392], [0.302, 0.056, 229.695]] },
+  { key: "sky", label: "Sky", targetHue: 237, statusRole: "info", exactHexes: ["#f0f9ff", "#e0f2fe", "#bae6fd", "#7dd3fc", "#38bdf8", "#0ea5e9", "#0284c7", "#0369a1", "#075985", "#0c4a6e", "#082f49"], oklch: [[0.977, 0.013, 236.620], [0.951, 0.026, 236.824], [0.901, 0.058, 230.902], [0.828, 0.111, 230.318], [0.746, 0.160, 232.661], [0.685, 0.169, 237.323], [0.588, 0.158, 241.966], [0.500, 0.134, 242.749], [0.443, 0.110, 240.790], [0.391, 0.090, 240.876], [0.293, 0.066, 243.157]] },
+  { key: "cyan", label: "Cyan", targetHue: 215, statusRole: "info", exactHexes: ["#ecfeff", "#cffafe", "#a5f3fc", "#67e8f9", "#22d3ee", "#06b6d4", "#0891b2", "#0e7490", "#155e75", "#164e63", "#083344"], oklch: [[0.984, 0.019, 200.873], [0.956, 0.045, 203.388], [0.917, 0.080, 205.041], [0.865, 0.127, 207.078], [0.789, 0.154, 211.530], [0.715, 0.143, 215.221], [0.609, 0.126, 221.723], [0.520, 0.105, 223.128], [0.450, 0.085, 224.283], [0.398, 0.070, 227.392], [0.302, 0.056, 229.695]] },
   { key: "teal", label: "Teal", targetHue: 183, oklch: [[0.984, 0.014, 180.720], [0.953, 0.051, 180.801], [0.910, 0.096, 180.426], [0.855, 0.138, 181.071], [0.777, 0.152, 181.912], [0.704, 0.140, 182.503], [0.600, 0.118, 184.704], [0.511, 0.096, 186.391], [0.437, 0.078, 188.216], [0.386, 0.063, 188.416], [0.277, 0.046, 192.524]] },
   { key: "emerald", label: "Emerald", targetHue: 162, statusRole: "positive", oklch: [[0.979, 0.021, 166.113], [0.950, 0.052, 163.051], [0.905, 0.093, 164.150], [0.845, 0.143, 164.978], [0.765, 0.177, 163.223], [0.696, 0.170, 162.480], [0.596, 0.145, 163.225], [0.508, 0.118, 165.612], [0.432, 0.095, 166.913], [0.378, 0.077, 168.940], [0.262, 0.051, 172.552]] },
   { key: "green", label: "Green", targetHue: 150, statusRole: "positive", oklch: [[0.982, 0.018, 155.826], [0.962, 0.044, 156.743], [0.925, 0.084, 155.995], [0.871, 0.150, 154.449], [0.792, 0.209, 151.711], [0.723, 0.219, 149.579], [0.627, 0.194, 149.214], [0.527, 0.154, 150.069], [0.448, 0.119, 151.328], [0.393, 0.095, 152.535], [0.266, 0.065, 152.934]] },
@@ -3861,7 +3861,7 @@ function shouldRefineElectricPrimaryStatusRamp(anchorHsl) {
     && hue <= 105
     && anchorHsl.saturation >= 84
     && anchorHsl.lightness >= 42
-    && anchorHsl.lightness <= 62;
+    && anchorHsl.lightness <= 78;
 }
 
 function getLightStatusRampTintHex(anchorHsl, index, anchorIndex, rampStyle = "") {
@@ -3931,14 +3931,14 @@ function getLightStatusRampShadeHex(anchorHsl, index, anchorIndex, colorCount, r
   const highChromaRamp = isElectricLimeRamp || anchorHsl.saturation >= 82;
   const shadeHueTarget = getLightStatusRampShadeHueTarget(anchorHsl.hue, rampStyle);
   const hueCurve = Math.pow(progress, highChromaRamp ? 1.1 : 0.82);
-  const lightnessCurve = Math.pow(progress, isElectricLimeRamp ? 0.95 : 1.05);
+  const lightnessCurve = Math.pow(progress, isElectricLimeRamp ? 0.78 : 1.05);
   const finalSaturation = isElectricLimeRamp
-    ? clamp(anchorHsl.saturation - 6, 84, 96)
+    ? clamp(anchorHsl.saturation - 24, 64, 84)
     : highChromaRamp
     ? clamp(anchorHsl.saturation - 10, 76, 94)
     : clamp(anchorHsl.saturation - 8, 36, 70);
   const midSaturation = isElectricLimeRamp
-    ? clamp(anchorHsl.saturation - 1, 88, 100)
+    ? clamp(anchorHsl.saturation - 12, 72, 90)
     : highChromaRamp
     ? clamp(anchorHsl.saturation - 2, 80, 100)
     : clamp(anchorHsl.saturation - 4, 32, anchorHsl.saturation);
@@ -3946,7 +3946,7 @@ function getLightStatusRampShadeHex(anchorHsl, index, anchorIndex, colorCount, r
     ? interpolateStatusNumber(anchorHsl.saturation, midSaturation, progress / 0.5)
     : interpolateStatusNumber(midSaturation, finalSaturation, (progress - 0.5) / 0.5);
   const hue = anchorHsl.hue + getStatusSignedHueDelta(anchorHsl.hue, shadeHueTarget) * hueCurve;
-  const lightness = interpolateStatusNumber(anchorHsl.lightness, isElectricLimeRamp ? 12 : highChromaRamp ? 13 : 14, lightnessCurve);
+  const lightness = interpolateStatusNumber(anchorHsl.lightness, isElectricLimeRamp ? 10 : highChromaRamp ? 13 : 14, lightnessCurve);
 
   return hslToHex(hue, clamp(saturation, 0, 100), lightness);
 }
@@ -3967,6 +3967,179 @@ function getLightStatusRampHex(anchorHex, anchorIndex, index, colorCount, rampSt
     : getLightStatusRampShadeHex(anchorHsl, index, anchorIndex, colorCount, rampStyle);
 }
 
+function getLightStatusRampMinimumGap(rampStyle = "") {
+  if (rampStyle === "electric-lime") return 4.2;
+  if (rampStyle === "vivid-primary") return 3.8;
+  return 3.4;
+}
+
+function getLightStatusRampMaximumGap(anchorHsl, rampStyle = "") {
+  if (rampStyle === "electric-lime") return 13.5;
+  if (rampStyle === "vivid-primary") return 14;
+
+  const hue = ((anchorHsl.hue % 360) + 360) % 360;
+  const isBlueCyan = hue >= 185 && hue <= 245;
+  const chromaPressure = clamp((anchorHsl.saturation - 55) / 45, 0, 1);
+  const baseGap = isBlueCyan ? 14.8 : 17;
+
+  return baseGap - chromaPressure * 1.4;
+}
+
+function getLightStatusRampShadeFloor(anchorHsl, rampStyle = "") {
+  if (rampStyle === "electric-lime") return 12;
+  if (rampStyle === "vivid-primary") return 23;
+  return anchorHsl.saturation >= 82 ? 13 : 14;
+}
+
+function getLightStatusRampSafeGap(anchorHsl, anchorIndex, colorCount, side, rampStyle = "") {
+  const requestedGap = getLightStatusRampMinimumGap(rampStyle);
+  const stepCount = side === "tint"
+    ? anchorIndex
+    : Math.max(colorCount - 1 - anchorIndex, 0);
+
+  if (!stepCount) {
+    return 0;
+  }
+
+  const availableLightness = side === "tint"
+    ? Math.max(0, 98.5 - anchorHsl.lightness)
+    : Math.max(0, anchorHsl.lightness - getLightStatusRampShadeFloor(anchorHsl, rampStyle));
+
+  return Math.min(requestedGap, availableLightness / stepCount);
+}
+
+function getSpacedLightStatusRampHexes(anchorHex, anchorIndex, colorCount, rampStyle = "") {
+  const anchorHsl = hexToHsl(anchorHex);
+
+  if (!anchorHsl || colorCount <= 0) {
+    return [];
+  }
+
+  const rampHsl = Array.from({ length: colorCount }, (_, index) => {
+    if (index === anchorIndex) {
+      return { ...anchorHsl };
+    }
+
+    return hexToHsl(getLightStatusRampHex(anchorHex, anchorIndex, index, colorCount, rampStyle)) || { ...anchorHsl };
+  });
+  const tintGap = getLightStatusRampSafeGap(anchorHsl, anchorIndex, colorCount, "tint", rampStyle);
+  const shadeGap = getLightStatusRampSafeGap(anchorHsl, anchorIndex, colorCount, "shade", rampStyle);
+  let previousLightness = anchorHsl.lightness;
+
+  for (let index = anchorIndex - 1; index >= 0; index -= 1) {
+    previousLightness = clamp(
+      Math.max(rampHsl[index].lightness, previousLightness + tintGap),
+      0,
+      98.5,
+    );
+    rampHsl[index] = {
+      ...rampHsl[index],
+      lightness: previousLightness,
+    };
+  }
+
+  previousLightness = anchorHsl.lightness;
+  for (let index = anchorIndex + 1; index < colorCount; index += 1) {
+    previousLightness = clamp(
+      Math.min(rampHsl[index].lightness, previousLightness - shadeGap),
+      getLightStatusRampShadeFloor(anchorHsl, rampStyle),
+      100,
+    );
+    rampHsl[index] = {
+      ...rampHsl[index],
+      lightness: previousLightness,
+    };
+  }
+
+  return rampHsl.map((hsl, index) => (
+    index === anchorIndex
+      ? anchorHex
+      : hslToHex(hsl.hue, hsl.saturation, hsl.lightness)
+  ));
+}
+
+function getSafelySpacedLightStatusRampColors(colors, anchorHex, anchorIndex, rampStyle = "") {
+  const anchorHsl = hexToHsl(anchorHex);
+
+  if (!anchorHsl || !Array.isArray(colors) || !colors.length || anchorIndex < 0 || anchorIndex >= colors.length) {
+    return colors;
+  }
+
+  const rampHsl = colors.map((color, index) => {
+    if (index === anchorIndex) {
+      return { ...anchorHsl };
+    }
+
+    return hexToHsl(color && (color.hex || color.css)) || { ...anchorHsl };
+  });
+  const tintMinGap = getLightStatusRampSafeGap(anchorHsl, anchorIndex, colors.length, "tint", rampStyle);
+  const shadeMinGap = getLightStatusRampSafeGap(anchorHsl, anchorIndex, colors.length, "shade", rampStyle);
+  const maxGap = getLightStatusRampMaximumGap(anchorHsl, rampStyle);
+  let previousLightness = anchorHsl.lightness;
+
+  for (let index = anchorIndex - 1; index >= 0; index -= 1) {
+    previousLightness = clamp(
+      rampHsl[index].lightness,
+      previousLightness + tintMinGap,
+      previousLightness + maxGap,
+    );
+    rampHsl[index] = {
+      ...rampHsl[index],
+      lightness: previousLightness,
+    };
+  }
+
+  previousLightness = anchorHsl.lightness;
+  for (let index = anchorIndex + 1; index < colors.length; index += 1) {
+    previousLightness = clamp(
+      rampHsl[index].lightness,
+      previousLightness - maxGap,
+      previousLightness - shadeMinGap,
+    );
+    rampHsl[index] = {
+      ...rampHsl[index],
+      lightness: previousLightness,
+    };
+  }
+
+  return colors.map((color, index) => {
+    const nextHex = index === anchorIndex
+      ? anchorHex
+      : hslToHex(rampHsl[index].hue, rampHsl[index].saturation, rampHsl[index].lightness);
+
+    return {
+      ...color,
+      sourceHex: color.sourceHex || color.hex,
+      css: nextHex,
+      hex: nextHex,
+      lightness: getVisibleLightnessFromHex(nextHex) * 100,
+      isRoleAnchor: index === anchorIndex,
+      roleAnchorHex: anchorHex,
+    };
+  });
+}
+
+function hasTintShadeNewExactPrimaryFamilyRamp(group) {
+  if (!group || group.key !== "primary") {
+    return false;
+  }
+
+  const family = getTintShadeNewFamilyByKey(group.familyKey);
+  const exactHexes = family && Array.isArray(family.exactHexes) ? family.exactHexes : null;
+
+  if (!exactHexes) {
+    return false;
+  }
+
+  const anchorToneIndex = Number.isFinite(group.anchorToneIndex)
+    ? group.anchorToneIndex
+    : COLOR_SYSTEM_REFERENCE_TONE_INDEX;
+  const anchorExactHex = normalizeHexInputValue(exactHexes[anchorToneIndex]);
+  const roleAnchorHex = normalizeHexInputValue(group.roleAnchorHex);
+
+  return Boolean(anchorExactHex && roleAnchorHex && anchorExactHex === roleAnchorHex);
+}
+
 function getLightModeStatusPaletteGroup(group, theme = "light") {
   const colors = Array.isArray(group && group.colors) ? group.colors : [];
   const roleAnchorHex = normalizeHexInputValue(group && group.roleAnchorHex);
@@ -3975,9 +4148,14 @@ function getLightModeStatusPaletteGroup(group, theme = "light") {
   let anchorHex = normalizeHexInputValue(roleAnchorHex || (anchorColor && anchorColor.hex));
   let anchorHsl = anchorHex ? hexToHsl(anchorHex) : null;
   const isPrimaryGroup = group && group.key === "primary";
+  const hasExactPrimaryFamilyRamp = hasTintShadeNewExactPrimaryFamilyRamp(group);
   const shouldUseElectricLimeRamp = isPrimaryGroup && shouldRefineElectricPrimaryStatusRamp(anchorHsl);
 
-  if (shouldUseElectricLimeRamp) {
+  if (hasExactPrimaryFamilyRamp) {
+    return group;
+  }
+
+  if (shouldUseElectricLimeRamp && anchorHsl && anchorHsl.lightness <= 62) {
     anchorIndex = Math.min(COLOR_SYSTEM_REFERENCE_TONE_INDEX, Math.max(colors.length - 1, 0));
     anchorColor = colors[anchorIndex];
     anchorHex = normalizeHexInputValue(roleAnchorHex || anchorHex || (anchorColor && anchorColor.hex));
@@ -3989,7 +4167,13 @@ function getLightModeStatusPaletteGroup(group, theme = "light") {
     || shouldUseElectricLimeRamp;
 
   if (!colors.length || !anchorHex || !shouldRefineRamp) {
-    return group;
+    return isPrimaryGroup && colors.length && anchorHex && !hasExactPrimaryFamilyRamp
+      ? {
+        ...group,
+        roleAnchorHex: normalizeHexInputValue(group.roleAnchorHex) || anchorHex,
+        colors: getSafelySpacedLightStatusRampColors(colors, anchorHex, anchorIndex, ""),
+      }
+      : group;
   }
 
   const rampStyle = shouldUseElectricLimeRamp
@@ -3998,23 +4182,27 @@ function getLightModeStatusPaletteGroup(group, theme = "light") {
     ? "vivid-primary"
     : "";
   const nextRoleAnchorHex = normalizeHexInputValue(group.roleAnchorHex) || anchorHex;
+  const rampHexes = getSpacedLightStatusRampHexes(anchorHex, anchorIndex, colors.length, rampStyle);
+  const rampColors = colors.map((color, index) => {
+    const nextHex = rampHexes[index] || getLightStatusRampHex(anchorHex, anchorIndex, index, colors.length, rampStyle);
+
+    return {
+      ...color,
+      sourceHex: color.sourceHex || color.hex,
+      css: nextHex,
+      hex: nextHex,
+      lightness: getVisibleLightnessFromHex(nextHex) * 100,
+      isRoleAnchor: index === anchorIndex,
+      roleAnchorHex: nextRoleAnchorHex,
+    };
+  });
 
   return {
     ...group,
     roleAnchorHex: nextRoleAnchorHex,
-    colors: colors.map((color, index) => {
-      const nextHex = getLightStatusRampHex(anchorHex, anchorIndex, index, colors.length, rampStyle);
-
-      return {
-        ...color,
-        sourceHex: color.sourceHex || color.hex,
-        css: nextHex,
-        hex: nextHex,
-        lightness: getVisibleLightnessFromHex(nextHex) * 100,
-        isRoleAnchor: index === anchorIndex,
-        roleAnchorHex: nextRoleAnchorHex,
-      };
-    }),
+    colors: isPrimaryGroup && !hasExactPrimaryFamilyRamp
+      ? getSafelySpacedLightStatusRampColors(rampColors, anchorHex, anchorIndex, rampStyle)
+      : rampColors,
   };
 }
 
