@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import {
   createCssVariablesExport,
   createJsonExport,
-  createTailwindExport,
+  createSpectroThemeExport,
 } from "@/lib/export/palette-export";
 import { getPalette } from "@/lib/storage/palette-repository";
 import { createClient } from "@/lib/supabase/server";
@@ -34,7 +34,7 @@ export default async function PaletteDetailPage({ params }: PaletteDetailPagePro
 
   const cssExport = createCssVariablesExport(palette);
   const jsonExport = createJsonExport(palette);
-  const tailwindExport = createTailwindExport(palette);
+  const spectroThemeExport = createSpectroThemeExport(palette);
   const filename = palette.name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
@@ -206,10 +206,10 @@ export default async function PaletteDetailPage({ params }: PaletteDetailPagePro
           value={jsonExport}
         />
         <ExportBlock
-          filename={`${filename}-tailwind.config.ts`}
-          label="Tailwind config"
+          filename={`${filename}-spectro-theme.config.ts`}
+          label="Spectro theme config"
           mimeType="text/typescript"
-          value={tailwindExport}
+          value={spectroThemeExport}
         />
       </section>
     </div>

@@ -40,7 +40,7 @@ export function createJsonExport(palette: SavedPalette): string {
   }, null, 2);
 }
 
-export function createTailwindExport(palette: SavedPalette): string {
+export function createSpectroThemeExport(palette: SavedPalette): string {
   const key = toVariableName(palette.name).replace(/-/g, "");
   const colors = palette.colors
     .map((color, index) => `        ${getColorLabel(index)}: "${color}",`)
