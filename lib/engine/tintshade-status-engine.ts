@@ -83,6 +83,7 @@ const HEX_NEUTRAL_EXTREME_LIGHTNESS_SATURATION_BONUS = 36;
 const HEX_NEUTRAL_BASE_OKLAB_CHROMA_MAX = 0.045;
 const HEX_NEUTRAL_EXTREME_LIGHTNESS_OKLAB_CHROMA_BONUS = 0.058;
 const TINT_SHADE_NEW_COLOR_SYSTEM_VERSION = 11;
+const TINT_SHADE_NEW_OKLCH_TEMPLATE_RAMP_LOGIC = "oklch-family-template";
 const TINT_SHADE_NEW_STATUS_REFRESH_SEED_MAX = 9999;
 const TINT_SHADE_NEW_SWATCH_LABEL_OPACITY = 0.9;
 const TINT_SHADE_NEW_VISIBLE_LIGHTNESS_MAX = 0.97;
@@ -262,6 +263,18 @@ const tintShadeNewFamilyToneTemplateCache = new Map();
 const COLOR_SYSTEM_TONES = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"];
 const COLOR_SYSTEM_TONE_CURVE = [0, 0.035, 0.085, 0.16, 0.26, 0.39, 0.52, 0.65, 0.78, 0.9, 1];
 const COLOR_SYSTEM_REFERENCE_TONE_INDEX = 5;
+const TINT_SHADE_NEW_PRIMARY_SOURCE_TRUTH_RAMPS = {
+  "#E9FF7A": {
+    label: "Honeysuckle",
+    anchorToneIndex: 2,
+    exactHexes: ["#FBFFE7", "#F4FFC5", "#E9FF7A", "#E2FD50", "#D8F81D", "#C5E307", "#A9BD02", "#8A9306", "#73770C", "#636510", "#393A04"],
+  },
+  "#7A99D9": {
+    label: "Portage",
+    anchorToneIndex: 5,
+    exactHexes: ["#F1F7FC", "#E5F0FA", "#D0E3F5", "#B4CFED", "#95B4E4", "#7A99D9", "#617BCA", "#5067B2", "#435690", "#3C4B73", "#232B43"],
+  },
+};
 const COLOR_SYSTEM_NEON_YELLOW_GREEN_HUE_MIN = 76;
 const COLOR_SYSTEM_NEON_YELLOW_GREEN_HUE_MAX = 176;
 const COLOR_SYSTEM_NEON_YELLOW_GREEN_CHROMA_MIN = 70;
@@ -2166,12 +2179,24 @@ function getTintShadeNewAnchorProfile() {
     relativeChromaGamut: COLOR_SYSTEM_RELATIVE_CHROMA_GAMUT,
   };
   const familyMatch = getTintShadeNewFamilyMatch(anchorProfile);
+  const sourceTruthRamp = getTintShadeNewPrimarySourceTruthRamp({
+    ...anchorProfile,
+    roleKey: "primary",
+  });
 
   return {
     ...anchorProfile,
     familyMatch,
     familyKey: familyMatch ? familyMatch.familyKey : null,
-    familyLabel: familyMatch ? familyMatch.familyLabel : null,
+    familyLabel: sourceTruthRamp && sourceTruthRamp.label
+      ? sourceTruthRamp.label
+      : familyMatch ? familyMatch.familyLabel : null,
+    anchorToneIndex: sourceTruthRamp && Number.isFinite(sourceTruthRamp.anchorToneIndex)
+      ? sourceTruthRamp.anchorToneIndex
+      : undefined,
+    anchorTone: sourceTruthRamp && Number.isFinite(sourceTruthRamp.anchorToneIndex)
+      ? COLOR_SYSTEM_TONES[sourceTruthRamp.anchorToneIndex]
+      : undefined,
   };
 }
 
@@ -2181,9 +2206,42 @@ function getTintShadeNewFamilyByKey(familyKey) {
     || TINT_SHADE_NEW_FAMILY_PROFILES[0];
 }
 
+function getTintShadeNewPrimarySourceTruthRamp(anchorProfile) {
+  if (!anchorProfile || anchorProfile.roleKey !== "primary") {
+    return null;
+  }
+
+  const anchorHex = normalizeHexInputValue(anchorProfile.hex);
+  return anchorHex ? TINT_SHADE_NEW_PRIMARY_SOURCE_TRUTH_RAMPS[anchorHex] || null : null;
+}
+
+function getTintShadeNewPrimarySourceTruthToneHex(anchorProfile, toneStop) {
+  const sourceTruthRamp = getTintShadeNewPrimarySourceTruthRamp(anchorProfile);
+
+  if (!sourceTruthRamp || !toneStop) {
+    return "";
+  }
+
+  const anchorToneIndex = Number.isFinite(sourceTruthRamp.anchorToneIndex)
+    ? sourceTruthRamp.anchorToneIndex
+    : COLOR_SYSTEM_REFERENCE_TONE_INDEX;
+  const anchorExactHex = normalizeHexInputValue(sourceTruthRamp.exactHexes && sourceTruthRamp.exactHexes[anchorToneIndex]);
+
+  if (!anchorExactHex || normalizeHexInputValue(anchorProfile.hex) !== anchorExactHex) {
+    return "";
+  }
+
+  return normalizeHexInputValue(sourceTruthRamp.exactHexes[toneStop.sourceIndex]) || "";
+}
+
 function getTintShadeNewExactFamilyToneHex(anchorProfile, toneStop) {
   if (!anchorProfile || !toneStop || anchorProfile.roleKey !== "primary") {
     return "";
+  }
+
+  const sourceTruthToneHex = getTintShadeNewPrimarySourceTruthToneHex(anchorProfile, toneStop);
+  if (sourceTruthToneHex) {
+    return sourceTruthToneHex;
   }
 
   const family = anchorProfile.familyMatch && anchorProfile.familyMatch.family
@@ -2482,13 +2540,18 @@ function getTintShadeNewFamilyToneScore(anchorProfile, family, sourceIndex) {
   const neutralInfluence = clamp((16 - anchorProfile.relativeChroma) / 16, 0, 1);
   const hueWeight = family.neutral ? 0.18 : 0.72 - neutralInfluence * 0.48;
   const neutralFit = family.neutral ? -neutralInfluence * 0.16 : neutralInfluence * 0.08;
+  const chromaticNeutralPenalty = family.neutral
+    ? smoothstep(18, 42, anchorProfile.relativeChroma) * 0.32
+      + smoothstep(0.035, 0.09, anchorProfile.c) * 0.28
+    : 0;
 
   return hueDistance * hueWeight
     + visibleLightnessDistance * 1.18
     + oklchLightnessDistance * 0.72
     + chromaDistance * 0.18
     + relativeChromaDistance * 0.24
-    + neutralFit;
+    + neutralFit
+    + chromaticNeutralPenalty;
 }
 
 function isTintShadeNewYellowGreenLimeAnchor(anchorProfile) {
@@ -2716,6 +2779,123 @@ function createTintShadeNewNeonYellowGreenColor(anchorProfile, toneStop) {
     targetRelativeChroma: relativeChroma,
     relativeChromaMax,
     relativeChromaGamut: COLOR_SYSTEM_RELATIVE_CHROMA_GAMUT,
+  };
+}
+
+function getTintShadeNewFamilyTemplateRampLightness(anchorProfile, toneStop, template, anchorTemplate, anchorToneIndex) {
+  if (!anchorProfile || !toneStop || !template || !anchorTemplate) {
+    return template ? template.l : anchorProfile.l;
+  }
+
+  if (toneStop.sourceIndex === anchorToneIndex) {
+    return anchorProfile.l;
+  }
+
+  const toneDistance = Math.abs(toneStop.sourceIndex - anchorToneIndex);
+  const templateDelta = template.l - anchorTemplate.l;
+  const anchorDelta = anchorProfile.l - anchorTemplate.l;
+  const influence = getTintShadeNewToneTemplateInfluence(toneStop, anchorToneIndex);
+  const targetDistance = Math.abs(templateDelta);
+  const minimumDistance = Math.max(targetDistance * 0.52, toneDistance * 0.014);
+  const maximumDistance = Math.max(targetDistance * 1.36, minimumDistance + 0.012);
+  let lightness = template.l + anchorDelta * influence;
+
+  if (toneStop.sourceIndex < anchorToneIndex) {
+    const lower = Math.min(0.992, anchorProfile.l + minimumDistance);
+    const upper = Math.min(0.992, anchorProfile.l + maximumDistance);
+    lightness = lower <= upper
+      ? clamp(lightness, lower, upper)
+      : upper;
+  } else {
+    const lower = Math.max(0.05, anchorProfile.l - maximumDistance);
+    const upper = Math.max(0.05, anchorProfile.l - minimumDistance);
+    lightness = lower <= upper
+      ? clamp(lightness, lower, upper)
+      : lower;
+  }
+
+  return clamp(lightness, 0.05, 0.992);
+}
+
+function getTintShadeNewFamilyTemplateRampChroma(anchorProfile, toneStop, template, anchorTemplate, lightness, hue, anchorToneIndex) {
+  if (!anchorProfile || !template || !anchorTemplate) {
+    return template ? template.c : 0;
+  }
+
+  if (toneStop && toneStop.sourceIndex === anchorToneIndex) {
+    return anchorProfile.c;
+  }
+
+  const anchorTemplateChroma = Math.max(anchorTemplate.c, 0.001);
+  const rawScale = clamp(anchorProfile.c / anchorTemplateChroma, 0.28, 1.72);
+  const influence = getTintShadeNewToneTemplateInfluence(toneStop, anchorToneIndex);
+  const chromaScale = 1 + (rawScale - 1) * (0.64 + influence * 0.36);
+  const targetChroma = Math.max(0, template.c * chromaScale);
+  const maxChroma = getColorSystemRelativeChromaMax(lightness, hue);
+
+  return maxChroma > 0
+    ? clamp(targetChroma, 0, maxChroma * 0.96)
+    : 0;
+}
+
+function createTintShadeNewFamilyTemplateRampColor(anchorProfile, toneStop) {
+  if (!anchorProfile || !toneStop || anchorProfile.roleKey !== "primary" || !anchorProfile.familyMatch) {
+    return null;
+  }
+
+  const template = getTintShadeNewToneTemplate(anchorProfile, toneStop);
+  const anchorTemplate = anchorProfile.familyMatch.template;
+
+  if (!template || !anchorTemplate) {
+    return null;
+  }
+
+  const anchorToneIndex = Number.isFinite(anchorProfile.anchorToneIndex)
+    ? anchorProfile.anchorToneIndex
+    : Number.isFinite(anchorProfile.familyMatch.sourceIndex)
+      ? anchorProfile.familyMatch.sourceIndex
+      : COLOR_SYSTEM_REFERENCE_TONE_INDEX;
+  const hueDelta = getColorSystemSignedHueDelta(anchorProfile.h, anchorTemplate.h);
+  const hue = normalizeColorSystemHue(template.h + hueDelta);
+  const oklchLightness = getTintShadeNewFamilyTemplateRampLightness(
+    anchorProfile,
+    toneStop,
+    template,
+    anchorTemplate,
+    anchorToneIndex,
+  );
+  const chroma = getTintShadeNewFamilyTemplateRampChroma(
+    anchorProfile,
+    toneStop,
+    template,
+    anchorTemplate,
+    oklchLightness,
+    hue,
+    anchorToneIndex,
+  );
+  const hex = createColorSystemHex(oklchLightness, chroma, hue);
+  const profile = parseColorSystemOklch(hex);
+  const finalLightness = profile ? profile.l : oklchLightness;
+  const finalHue = profile ? profile.h : hue;
+  const finalChroma = profile ? profile.c : chroma;
+  const relativeChromaMax = getColorSystemRelativeChromaMax(finalLightness, finalHue);
+  const relativeChroma = relativeChromaMax > 0
+    ? getColorSystemRelativeChromaFromAbsolute(finalLightness, finalHue, finalChroma)
+    : 0;
+  const targetRelativeChroma = relativeChromaMax > 0
+    ? getColorSystemRelativeChromaFromAbsolute(oklchLightness, hue, chroma)
+    : relativeChroma;
+
+  return {
+    hex,
+    hue: finalHue,
+    visibleLightness: getVisibleLightnessFromHex(hex),
+    oklchLightness: finalLightness,
+    relativeChroma,
+    targetRelativeChroma,
+    relativeChromaMax,
+    relativeChromaGamut: COLOR_SYSTEM_RELATIVE_CHROMA_GAMUT,
+    rampLogic: TINT_SHADE_NEW_OKLCH_TEMPLATE_RAMP_LOGIC,
   };
 }
 
@@ -3033,6 +3213,9 @@ function createTintShadeNewTonePoint(toneStop, anchorProfile, anchorToneStop) {
   const visibleLightness = getTintShadeNewToneVisibleLightness(toneStop, anchorProfile, roleAnchorToneStop);
   const exactToneHex = getTintShadeNewExactFamilyToneHex(anchorProfile, toneStop);
   const exactToneColor = exactToneHex ? createTintShadeNewExactFamilyColor(exactToneHex) : null;
+  const familyTemplateRampColor = !exactToneColor && !isAnchorTone
+    ? createTintShadeNewFamilyTemplateRampColor(anchorProfile, toneStop)
+    : null;
   const generatedColor = exactToneColor || (isAnchorTone
     ? {
       hex: anchorProfile.hex,
@@ -3043,8 +3226,9 @@ function createTintShadeNewTonePoint(toneStop, anchorProfile, anchorToneStop) {
       targetRelativeChroma: anchorProfile.relativeChroma,
       relativeChromaMax: anchorProfile.relativeChromaMax,
       relativeChromaGamut: anchorProfile.relativeChromaGamut,
+      rampLogic: isPrimaryRole ? TINT_SHADE_NEW_OKLCH_TEMPLATE_RAMP_LOGIC : null,
     }
-    : createTintShadeNewColor(visibleLightness, anchorProfile, toneStop));
+    : familyTemplateRampColor || createTintShadeNewColor(visibleLightness, anchorProfile, toneStop));
   const displayVisibleLightness = isAnchorTone
     ? clamp(generatedColor.visibleLightness, TINT_SHADE_NEW_VISIBLE_LIGHTNESS_MIN, TINT_SHADE_NEW_VISIBLE_LIGHTNESS_MAX)
     : generatedColor.visibleLightness;
@@ -3070,6 +3254,7 @@ function createTintShadeNewTonePoint(toneStop, anchorProfile, anchorToneStop) {
     targetRelativeChroma: generatedColor.targetRelativeChroma,
     relativeChromaMax: generatedColor.relativeChromaMax,
     relativeChromaGamut: generatedColor.relativeChromaGamut,
+    rampLogic: generatedColor.rampLogic || null,
     roleAnchorHex: anchorProfile.hex,
     roleAnchorType: anchorProfile.roleAnchorType,
     statusHueRange: anchorProfile.statusHueRange,
@@ -3115,6 +3300,7 @@ function getTintShadeNewColorSystem(pointCount) {
       familyLabel: roleProfile.familyLabel,
       anchorTone: COLOR_SYSTEM_TONES[roleAnchorToneIndex] || anchorToneStop.tone,
       anchorToneIndex: roleAnchorToneIndex,
+      rampLogic: role.key === "primary" ? TINT_SHADE_NEW_OKLCH_TEMPLATE_RAMP_LOGIC : null,
       visibleLightnessMax: roleLightnessRange.max,
       visibleLightnessMin: roleLightnessRange.min,
       points: toneStops.map((toneStop) => createTintShadeNewTonePoint(toneStop, roleProfile, anchorToneStop)),
@@ -4140,6 +4326,14 @@ function hasTintShadeNewExactPrimaryFamilyRamp(group) {
   return Boolean(anchorExactHex && roleAnchorHex && anchorExactHex === roleAnchorHex);
 }
 
+function hasTintShadeNewOklchFamilyTemplateRamp(group) {
+  return Boolean(
+    group
+      && group.key === "primary"
+      && group.rampLogic === TINT_SHADE_NEW_OKLCH_TEMPLATE_RAMP_LOGIC,
+  );
+}
+
 function getLightModeStatusPaletteGroup(group, theme = "light") {
   const colors = Array.isArray(group && group.colors) ? group.colors : [];
   const roleAnchorHex = normalizeHexInputValue(group && group.roleAnchorHex);
@@ -4149,9 +4343,10 @@ function getLightModeStatusPaletteGroup(group, theme = "light") {
   let anchorHsl = anchorHex ? hexToHsl(anchorHex) : null;
   const isPrimaryGroup = group && group.key === "primary";
   const hasExactPrimaryFamilyRamp = hasTintShadeNewExactPrimaryFamilyRamp(group);
+  const hasOklchFamilyTemplateRamp = hasTintShadeNewOklchFamilyTemplateRamp(group);
   const shouldUseElectricLimeRamp = isPrimaryGroup && shouldRefineElectricPrimaryStatusRamp(anchorHsl);
 
-  if (hasExactPrimaryFamilyRamp) {
+  if (hasExactPrimaryFamilyRamp || hasOklchFamilyTemplateRamp) {
     return group;
   }
 
@@ -4258,6 +4453,7 @@ export function generateTintShadeStatusPalette(input) {
         pointLightness: point.pointLightness,
         relativeChroma: point.relativeChroma,
         targetRelativeChroma: point.targetRelativeChroma,
+        rampLogic: point.rampLogic || group.rampLogic || null,
       };
     }).filter((color) => color.hex);
 
@@ -4271,6 +4467,7 @@ export function generateTintShadeStatusPalette(input) {
       familyLabel: group.familyLabel || null,
       anchorTone: group.anchorTone || null,
       anchorToneIndex: group.anchorToneIndex,
+      rampLogic: group.rampLogic || null,
       colors,
     };
     }),
