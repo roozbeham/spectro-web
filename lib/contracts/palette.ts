@@ -46,6 +46,7 @@ export type GeneratedPalette = {
   groups?: GeneratedPaletteGroup[];
   settings: Record<string, unknown>;
   source: PaletteSource;
+  prism?: unknown;
 };
 
 export type GeneratePaletteResponse = {
