@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 // Server-side port of the tintshadenew Status ramp engine from the Figma plugin.
 // Keep this module server-only; it contains the protected tint/shade palette logic.
@@ -3876,7 +3877,7 @@ function getGentleDarkStatusAnchorHex(sourceAnchorHex) {
     return normalizedHex;
   }
 
-  let nextHue = hsl.hue;
+  const nextHue = hsl.hue;
   let nextSaturation = hsl.saturation;
   let nextLightness = hsl.lightness;
 
