@@ -61,39 +61,17 @@ export default function Home() {
           </div>
 
           <div className="relative mt-[clamp(18px,5.2vh,47px)] h-[clamp(170px,58.3vh,525px)] w-full shrink-0">
-            <div className="absolute left-[max(0px,calc(50%-447px))] top-[clamp(12px,2.7vh,24px)] h-full w-[min(43vw,439px)] min-w-[220px] overflow-hidden rounded-[14px] bg-[#2c2c2c] shadow-[0_24px_70px_rgba(0,0,0,0.42)] max-[720px]:left-[calc(50%-225px)] max-[720px]:w-[300px] max-[520px]:left-[calc(50%-188px)] max-[520px]:w-[250px]">
-              <div className="flex h-[7.55%] min-h-[20px] items-center gap-[14px] border-b border-[#383838] bg-[#2c2c2c] px-[14px]">
-                <img alt="" className="h-[25px] w-[25px] rounded-[7px]" src="/landing/spectro-icon.png" />
-                <span className="text-[11px] font-medium leading-none text-white">
-                  Spectro
-                </span>
-              </div>
-              <div className="relative h-[102.75%] overflow-hidden">
-                <div
-                  aria-label="Spectro neutral color generator interface"
-                  className="absolute left-[-14.4%] top-[-14.7%] h-[124%] w-[126.35%] bg-[url('/landing/neutral-panel.png')] bg-cover bg-center"
-                  role="img"
-                />
-              </div>
-              <div className="pointer-events-none absolute inset-x-[-8%] bottom-0 h-[45%] bg-gradient-to-b from-[#05050600] to-[#050506]" />
-            </div>
+            <div
+              aria-label="Spectro neutral color generator interface"
+              className="absolute left-[max(0px,calc(50%-447px))] top-[clamp(12px,2.7vh,24px)] aspect-[1170/1401] h-full max-h-full min-w-[220px] bg-[url('/landing/neutral-panel.png')] bg-contain bg-top bg-no-repeat shadow-[0_24px_70px_rgba(0,0,0,0.42)] max-[720px]:left-[calc(50%-225px)] max-[720px]:h-[82%] max-[520px]:left-[calc(50%-188px)] max-[520px]:h-[76%]"
+              role="img"
+            />
 
-            <div className="absolute left-[min(calc(50%+8px),calc(100%-439px))] top-0 h-full w-[min(43vw,439px)] min-w-[220px] overflow-hidden rounded-[14px] bg-[#2c2c2c] shadow-[-60px_20px_30px_rgba(0,0,0,0.6)] max-[720px]:left-[calc(50%-10px)] max-[720px]:w-[300px] max-[520px]:left-[calc(50%-2px)] max-[520px]:w-[250px]">
-              <div className="flex h-[7.55%] min-h-[20px] items-center gap-[14px] border-b border-[#383838] bg-[#2c2c2c] px-[14px]">
-                <img alt="" className="h-[25px] w-[25px] rounded-[7px]" src="/landing/spectro-icon.png" />
-                <span className="text-[11px] font-medium leading-none text-white">
-                  Spectro
-                </span>
-              </div>
-              <div className="relative aspect-[486/599] w-full overflow-hidden">
-                <div
-                  aria-label="Spectro status palette generator interface"
-                  className="absolute left-[-15.8%] top-[-16.2%] h-[126%] w-[133.75%] bg-[url('/landing/status-panel.png')] bg-cover bg-center"
-                  role="img"
-                />
-              </div>
-              <div className="pointer-events-none absolute inset-x-[-8%] bottom-0 h-[45%] bg-gradient-to-b from-[#05050600] to-[#050506]" />
-            </div>
+            <div
+              aria-label="Spectro status palette generator interface"
+              className="absolute left-[min(calc(50%+8px),calc(100%-439px))] top-0 aspect-[1170/1467] h-full max-h-full min-w-[220px] bg-[url('/landing/status-panel.png')] bg-contain bg-top bg-no-repeat shadow-[-60px_20px_30px_rgba(0,0,0,0.6)] max-[720px]:left-[calc(50%-10px)] max-[720px]:h-[82%] max-[520px]:left-[calc(50%-2px)] max-[520px]:h-[76%]"
+              role="img"
+            />
           </div>
         </section>
       </div>
