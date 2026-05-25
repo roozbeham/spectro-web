@@ -60,17 +60,23 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="relative mt-[clamp(18px,5.2vh,47px)] h-[760px] w-full shrink-0">
-            <div
-              aria-label="Spectro neutral color generator interface"
-              className="absolute left-[calc(50%-584px)] top-6 aspect-[1170/1401] w-[585px] bg-[url('/landing/neutral-panel.png')] bg-contain bg-top bg-no-repeat shadow-[0_24px_70px_rgba(0,0,0,0.42)]"
-              role="img"
+          <div className="relative mt-[clamp(18px,5.2vh,47px)] h-[552px] w-full shrink-0">
+            <img
+              alt="Spectro neutral color generator interface"
+              className="absolute left-[calc(50%-448px)] top-6 w-[440px] max-w-[calc(100vw-40px)] select-none shadow-[0_24px_70px_rgba(0,0,0,0.42)]"
+              draggable={false}
+              height={1401}
+              src="/landing/neutral-panel.png"
+              width={1170}
             />
 
-            <div
-              aria-label="Spectro status palette generator interface"
-              className="absolute left-[calc(50%+8px)] top-0 aspect-[1170/1467] w-[585px] bg-[url('/landing/status-panel.png')] bg-contain bg-top bg-no-repeat shadow-[-60px_20px_30px_rgba(0,0,0,0.6)]"
-              role="img"
+            <img
+              alt="Spectro status palette generator interface"
+              className="absolute left-[calc(50%+8px)] top-0 w-[440px] max-w-[calc(100vw-40px)] select-none shadow-[-60px_20px_30px_rgba(0,0,0,0.6)]"
+              draggable={false}
+              height={1467}
+              src="/landing/status-panel.png"
+              width={1170}
             />
           </div>
         </section>
