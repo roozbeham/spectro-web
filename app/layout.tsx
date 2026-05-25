@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Spectro",
-  description: "Protected palette generation and sync for Spectro.",
+  description: "Server-side palette generation and storage for Spectro.",
 };
 
 export default function RootLayout({

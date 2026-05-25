@@ -1,5 +1,4 @@
 import type { SavePaletteResponse } from "@/lib/contracts/palette";
-import { getCurrentUserId } from "@/lib/auth/current-user";
 import {
   duplicatePalette,
   getPaletteStorageDriver,
@@ -27,9 +26,8 @@ export async function OPTIONS() {
 export async function POST(_request: Request, context: RouteContext) {
   try {
     const { id } = await context.params;
-    const userId = await getCurrentUserId();
     const response: SavePaletteResponse = {
-      palette: await duplicatePalette(id, userId),
+      palette: await duplicatePalette(id),
     };
 
     return Response.json(response, {

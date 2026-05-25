@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { getPaletteStorageDriver, listPalettes } from "@/lib/storage/palette-repository";
-import { createClient } from "@/lib/supabase/server";
 import {
   deletePaletteAction,
   duplicatePaletteAction,
@@ -10,9 +9,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPalettesPage() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  const palettes = await listPalettes(data.user?.id);
+  const palettes = await listPalettes();
   const storageDriver = getPaletteStorageDriver();
 
   return (

@@ -8,7 +8,6 @@ import {
   listPalettes,
   saveGeneratedPalette,
 } from "@/lib/storage/palette-repository";
-import { getCurrentUserId } from "@/lib/auth/current-user";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,9 +16,8 @@ const corsHeaders = {
 };
 
 export async function GET() {
-  const userId = await getCurrentUserId();
   const response: PaletteListResponse = {
-    palettes: await listPalettes(userId),
+    palettes: await listPalettes(),
   };
 
   return Response.json(response, {
@@ -39,7 +37,6 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
-    const userId = await getCurrentUserId();
     const body = await request.json() as SavePaletteRequest;
 
     if (!body.palette) {
@@ -52,7 +49,7 @@ export async function POST(request: Request) {
     }
 
     const response: SavePaletteResponse = {
-      palette: await saveGeneratedPalette(body.palette, body.name, userId),
+      palette: await saveGeneratedPalette(body.palette, body.name),
     };
 
     return Response.json(response, {

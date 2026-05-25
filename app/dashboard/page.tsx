@@ -1,13 +1,10 @@
 import Link from "next/link";
 import { getPaletteStorageDriver, listPalettes } from "@/lib/storage/palette-repository";
-import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  const palettes = await listPalettes(data.user?.id);
+  const palettes = await listPalettes();
   const storageDriver = getPaletteStorageDriver();
   const recentPalettes = palettes.slice(0, 3);
 

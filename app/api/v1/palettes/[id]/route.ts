@@ -1,5 +1,4 @@
 import type { SavePaletteResponse } from "@/lib/contracts/palette";
-import { getCurrentUserId } from "@/lib/auth/current-user";
 import {
   deletePalette,
   getPalette,
@@ -28,8 +27,7 @@ export async function OPTIONS() {
 
 export async function GET(_request: Request, context: RouteContext) {
   const { id } = await context.params;
-  const userId = await getCurrentUserId();
-  const palette = await getPalette(id, userId);
+  const palette = await getPalette(id);
 
   if (!palette) {
     return Response.json({
@@ -53,7 +51,6 @@ export async function GET(_request: Request, context: RouteContext) {
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const { id } = await context.params;
-    const userId = await getCurrentUserId();
     const body = await request.json() as { name?: string };
     const name = String(body.name || "").trim();
 
@@ -67,7 +64,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     const response: SavePaletteResponse = {
-      palette: await renamePalette(id, name, userId),
+      palette: await renamePalette(id, name),
     };
 
     return Response.json(response, {
@@ -89,9 +86,8 @@ export async function PATCH(request: Request, context: RouteContext) {
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const { id } = await context.params;
-    const userId = await getCurrentUserId();
 
-    await deletePalette(id, userId);
+    await deletePalette(id);
 
     return new Response(null, {
       status: 204,

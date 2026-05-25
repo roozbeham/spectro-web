@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getCurrentUserId } from "@/lib/auth/current-user";
 import {
   deletePalette,
   duplicatePalette,
@@ -19,26 +18,22 @@ function getRequiredValue(formData: FormData, key: string): string {
 }
 
 export async function renamePaletteAction(formData: FormData) {
-  const userId = await getCurrentUserId();
   await renamePalette(
     getRequiredValue(formData, "paletteId"),
     getRequiredValue(formData, "name"),
-    userId,
   );
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/palettes");
 }
 
 export async function duplicatePaletteAction(formData: FormData) {
-  const userId = await getCurrentUserId();
-  await duplicatePalette(getRequiredValue(formData, "paletteId"), userId);
+  await duplicatePalette(getRequiredValue(formData, "paletteId"));
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/palettes");
 }
 
 export async function deletePaletteAction(formData: FormData) {
-  const userId = await getCurrentUserId();
-  await deletePalette(getRequiredValue(formData, "paletteId"), userId);
+  await deletePalette(getRequiredValue(formData, "paletteId"));
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/palettes");
 }

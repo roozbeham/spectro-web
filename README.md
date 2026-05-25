@@ -1,8 +1,8 @@
 # Spectro Web
 
-Spectro Web is the experimental API and future SaaS surface for Spectro.
-The first milestone is a protected palette-generation API that the Figma plugin
-can call without moving valuable engine logic into plugin/browser code.
+Spectro Web is the server-side API surface for Spectro. It keeps palette
+generation, storage, and export behavior on the server without account, auth,
+or login flows.
 
 ## Getting Started
 
@@ -35,16 +35,12 @@ Supabase:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL="https://your-project-ref.supabase.co"
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="your-publishable-or-anon-key"
 SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 PALETTE_STORAGE_DRIVER="supabase"
 ```
 
 Use the service role key only on the server. Do not expose it in plugin or
 browser code.
-
-Supabase Auth also needs the public publishable or anon key. In the Supabase
-dashboard this is under Project Settings -> API -> Project API keys.
 
 When Supabase storage is active, `GET /api/v1/palettes` and
 `POST /api/v1/palettes` include this response header:
@@ -58,14 +54,6 @@ Without those env vars, the API falls back to local development storage:
 ```text
 x-spectro-storage: local
 ```
-
-After user-owned palette saving works, run `supabase/palette-rls.sql` in the
-Supabase SQL editor. That enables user-level read/write policies for the
-`palettes` table.
-
-To prepare Figma plugin account connection, run
-`supabase/plugin-connections.sql` in the Supabase SQL editor. That creates the
-short-lived connection token table used by `/plugin/connect`.
 
 ## Palette API Contract
 

@@ -9,11 +9,11 @@ export default function Home() {
             Spectro
           </Link>
           <nav className="flex items-center gap-3 text-sm font-medium">
-            <Link className="rounded-md px-3 py-2 text-[#4c555d] transition hover:text-[#15171a]" href="/sign-in">
-              Sign in
+            <Link className="rounded-md px-3 py-2 text-[#4c555d] transition hover:text-[#15171a]" href="/dashboard">
+              Dashboard
             </Link>
-            <Link className="rounded-md bg-[#15171a] px-4 py-2 text-white transition hover:bg-[#2d3338]" href="/sign-up">
-              Sign up
+            <Link className="rounded-md bg-[#15171a] px-4 py-2 text-white transition hover:bg-[#2d3338]" href="/palette-test">
+              API test
             </Link>
           </nav>
         </header>
@@ -21,21 +21,21 @@ export default function Home() {
         <section className="grid flex-1 gap-10 py-12 lg:grid-cols-[1fr_420px] lg:items-center">
           <div className="flex max-w-2xl flex-col gap-6">
             <p className="text-sm font-medium uppercase text-[#697177]">
-              Spectro Cloud
+              Spectro API
             </p>
             <h1 className="text-4xl font-semibold leading-tight sm:text-6xl">
-              Palette generation, saving, and sync in one place.
+              Server-side palette generation for Spectro.
             </h1>
             <p className="max-w-xl text-lg leading-8 text-[#5c6268]">
-              Spectro Web is becoming the account hub for saved palettes, Figma sync,
-              and protected cloud generation.
+              Spectro Web hosts palette generation, storage, and export endpoints
+              without account or login flows.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link className="flex h-12 items-center justify-center rounded-md bg-[#15171a] px-5 text-sm font-semibold text-white transition hover:bg-[#2d3338]" href="/plugin/connect">
-                Connect Figma plugin
+              <Link className="flex h-12 items-center justify-center rounded-md bg-[#15171a] px-5 text-sm font-semibold text-white transition hover:bg-[#2d3338]" href="/palette-test">
+                Test palette API
               </Link>
-              <Link className="flex h-12 items-center justify-center rounded-md border border-[#b9c0c7] px-5 text-sm font-semibold transition hover:border-[#15171a]" href="/sign-up?next=%2Fplugin%2Fconnect">
-                Create account
+              <Link className="flex h-12 items-center justify-center rounded-md border border-[#b9c0c7] px-5 text-sm font-semibold transition hover:border-[#15171a]" href="/dashboard">
+                View saved palettes
               </Link>
             </div>
           </div>

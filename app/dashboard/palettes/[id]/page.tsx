@@ -6,7 +6,6 @@ import {
   createSpectroThemeExport,
 } from "@/lib/export/palette-export";
 import { getPalette } from "@/lib/storage/palette-repository";
-import { createClient } from "@/lib/supabase/server";
 import {
   deletePaletteAction,
   duplicatePaletteAction,
@@ -24,9 +23,7 @@ type PaletteDetailPageProps = {
 
 export default async function PaletteDetailPage({ params }: PaletteDetailPageProps) {
   const { id } = await params;
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  const palette = await getPalette(id, data.user?.id);
+  const palette = await getPalette(id);
 
   if (!palette) {
     notFound();
