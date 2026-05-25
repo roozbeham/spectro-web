@@ -11,7 +11,7 @@ export default function Home() {
         backgroundImage: "url('/landing/hero-bg.png')",
         backgroundPosition: "top center",
         backgroundRepeat: "no-repeat",
-        backgroundSize: "100% auto",
+        backgroundSize: "max(100vw, min(1920px, calc(100svh * 2.63))) auto",
       }}
     >
       <div className="relative z-10 mx-auto flex h-full w-full max-w-[1026px] flex-col px-5 sm:px-8">
