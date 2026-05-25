@@ -63,7 +63,7 @@ export default function Home() {
           <div className="relative mt-[clamp(18px,5.2vh,47px)] h-[552px] w-full shrink-0">
             <img
               alt="Spectro neutral color generator interface"
-              className="absolute left-[calc(50%-448px)] top-6 w-[440px] max-w-[calc(100vw-40px)] select-none shadow-[0_24px_70px_rgba(0,0,0,0.42)]"
+              className="absolute left-[calc(50%-448px)] top-6 w-[440px] max-w-[calc(100vw-40px)] select-none"
               draggable={false}
               height={1401}
               src="/landing/neutral-panel.png"
@@ -72,10 +72,13 @@ export default function Home() {
 
             <img
               alt="Spectro status palette generator interface"
-              className="absolute left-[calc(50%+8px)] top-0 w-[440px] max-w-[calc(100vw-40px)] select-none shadow-[-60px_20px_30px_rgba(0,0,0,0.6)]"
+              className="absolute left-[calc(50%+8px)] top-0 w-[440px] max-w-[calc(100vw-40px)] select-none"
               draggable={false}
               height={1467}
               src="/landing/status-panel.png"
+              style={{
+                boxShadow: "-60px 20px 30px rgba(0, 0, 0, 0.6)",
+              }}
               width={1170}
             />
           </div>
