@@ -69,10 +69,10 @@ export default function Home() {
                 </span>
               </div>
               <div className="relative h-[102.75%] overflow-hidden">
-                <img
-                  alt="Spectro neutral color generator interface"
-                  className="absolute left-[-14.4%] top-[-14.7%] h-[124%] max-w-none object-cover"
-                  src="/landing/neutral-panel.png"
+                <div
+                  aria-label="Spectro neutral color generator interface"
+                  className="absolute left-[-14.4%] top-[-14.7%] h-[124%] w-[126.35%] bg-[url('/landing/neutral-panel.png')] bg-cover bg-center"
+                  role="img"
                 />
               </div>
               <div className="pointer-events-none absolute inset-x-[-8%] bottom-0 h-[45%] bg-gradient-to-b from-[#05050600] to-[#050506]" />
@@ -86,10 +86,10 @@ export default function Home() {
                 </span>
               </div>
               <div className="relative aspect-[486/599] w-full overflow-hidden">
-                <img
-                  alt="Spectro status palette generator interface"
-                  className="absolute left-[-15.8%] top-[-16.2%] h-[126%] max-w-none object-cover"
-                  src="/landing/status-panel.png"
+                <div
+                  aria-label="Spectro status palette generator interface"
+                  className="absolute left-[-15.8%] top-[-16.2%] h-[126%] w-[133.75%] bg-[url('/landing/status-panel.png')] bg-cover bg-center"
+                  role="img"
                 />
               </div>
               <div className="pointer-events-none absolute inset-x-[-8%] bottom-0 h-[45%] bg-gradient-to-b from-[#05050600] to-[#050506]" />

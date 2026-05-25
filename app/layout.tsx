@@ -15,6 +15,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Spectro",
   description: "Server-side palette generation and storage for Spectro.",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
