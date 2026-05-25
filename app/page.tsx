@@ -61,26 +61,28 @@ export default function Home() {
           </div>
 
           <div className="relative mt-[clamp(18px,5.2vh,47px)] h-[552px] w-full shrink-0">
-            <img
-              alt="Spectro neutral color generator interface"
-              className="absolute left-[calc(50%-448px)] top-6 w-[440px] max-w-[calc(100vw-40px)] select-none"
-              draggable={false}
-              height={1401}
-              src="/landing/neutral-panel.png"
-              width={1170}
-            />
+            <div className="relative mx-auto h-full w-[896px] max-[970px]:w-[calc(100vw-40px)]">
+              <img
+                alt="Spectro neutral color generator interface"
+                className="absolute left-0 top-6 w-[440px] select-none max-[970px]:w-[49.107%]"
+                draggable={false}
+                height={1401}
+                src="/landing/neutral-panel.png"
+                width={1170}
+              />
 
-            <img
-              alt="Spectro status palette generator interface"
-              className="absolute left-[calc(50%+8px)] top-0 w-[440px] max-w-[calc(100vw-40px)] select-none"
-              draggable={false}
-              height={1467}
-              src="/landing/status-panel.png"
-              style={{
-                boxShadow: "-60px 20px 30px rgba(0, 0, 0, 0.6)",
-              }}
-              width={1170}
-            />
+              <img
+                alt="Spectro status palette generator interface"
+                className="absolute left-[456px] top-0 w-[440px] select-none max-[970px]:left-[50.893%] max-[970px]:w-[49.107%]"
+                draggable={false}
+                height={1467}
+                src="/landing/status-panel.png"
+                style={{
+                  boxShadow: "-60px 20px 30px rgba(0, 0, 0, 0.6)",
+                }}
+                width={1170}
+              />
+            </div>
           </div>
         </section>
       </div>
