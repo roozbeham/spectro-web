@@ -13,9 +13,13 @@
 }
 
 body {
-  background: var(--background);
+  background: #050506;
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+html {
+  background: #050506;
 }
 
 button,
