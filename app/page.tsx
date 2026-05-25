@@ -60,16 +60,16 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="relative mt-[clamp(18px,5.2vh,47px)] h-[clamp(170px,58.3vh,525px)] w-full shrink-0">
+          <div className="relative mt-[clamp(18px,5.2vh,47px)] min-h-0 w-full flex-1">
             <div
               aria-label="Spectro neutral color generator interface"
-              className="absolute left-[max(0px,calc(50%-447px))] top-[clamp(12px,2.7vh,24px)] aspect-[1170/1401] h-full max-h-full min-w-[220px] bg-[url('/landing/neutral-panel.png')] bg-contain bg-top bg-no-repeat shadow-[0_24px_70px_rgba(0,0,0,0.42)] max-[720px]:left-[calc(50%-225px)] max-[720px]:h-[82%] max-[520px]:left-[calc(50%-188px)] max-[520px]:h-[76%]"
+              className="absolute bottom-0 left-[calc(50%-447px)] h-[525px] w-[439px] bg-[url('/landing/neutral-panel.png')] bg-contain bg-bottom bg-no-repeat shadow-[0_24px_70px_rgba(0,0,0,0.42)] max-[720px]:left-[calc(50%-445px)]"
               role="img"
             />
 
             <div
               aria-label="Spectro status palette generator interface"
-              className="absolute left-[min(calc(50%+8px),calc(100%-439px))] top-0 aspect-[1170/1467] h-full max-h-full min-w-[220px] bg-[url('/landing/status-panel.png')] bg-contain bg-top bg-no-repeat shadow-[-60px_20px_30px_rgba(0,0,0,0.6)] max-[720px]:left-[calc(50%-10px)] max-[720px]:h-[82%] max-[520px]:left-[calc(50%-2px)] max-[520px]:h-[76%]"
+              className="absolute bottom-0 left-[calc(50%+8px)] h-[525px] w-[439px] bg-[url('/landing/status-panel.png')] bg-contain bg-bottom bg-no-repeat shadow-[-60px_20px_30px_rgba(0,0,0,0.6)] max-[720px]:left-[calc(50%+0px)]"
               role="img"
             />
           </div>
