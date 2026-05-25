@@ -60,16 +60,16 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="relative mt-[clamp(18px,5.2vh,47px)] min-h-0 w-full flex-1">
+          <div className="relative mt-[clamp(18px,5.2vh,47px)] h-[760px] w-full shrink-0">
             <div
               aria-label="Spectro neutral color generator interface"
-              className="absolute bottom-0 left-[calc(50%-447px)] h-[525px] w-[439px] bg-[url('/landing/neutral-panel.png')] bg-contain bg-bottom bg-no-repeat shadow-[0_24px_70px_rgba(0,0,0,0.42)] max-[720px]:left-[calc(50%-445px)]"
+              className="absolute left-[calc(50%-584px)] top-6 aspect-[1170/1401] w-[585px] bg-[url('/landing/neutral-panel.png')] bg-contain bg-top bg-no-repeat shadow-[0_24px_70px_rgba(0,0,0,0.42)]"
               role="img"
             />
 
             <div
               aria-label="Spectro status palette generator interface"
-              className="absolute bottom-0 left-[calc(50%+8px)] h-[525px] w-[439px] bg-[url('/landing/status-panel.png')] bg-contain bg-bottom bg-no-repeat shadow-[-60px_20px_30px_rgba(0,0,0,0.6)] max-[720px]:left-[calc(50%+0px)]"
+              className="absolute left-[calc(50%+8px)] top-0 aspect-[1170/1467] w-[585px] bg-[url('/landing/status-panel.png')] bg-contain bg-top bg-no-repeat shadow-[-60px_20px_30px_rgba(0,0,0,0.6)]"
               role="img"
             />
           </div>
