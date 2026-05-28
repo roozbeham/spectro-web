@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+import "server-only";
+
 // Server-side port of the tintshadenew Status ramp engine from the Figma plugin.
 // Keep this module server-only; it contains the protected tint/shade palette logic.
 

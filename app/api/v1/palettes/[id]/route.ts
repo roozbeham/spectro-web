@@ -5,11 +5,13 @@ import {
   getPaletteStorageDriver,
   renamePalette,
 } from "@/lib/storage/palette-repository";
+import {
+  corsOptionsResponse,
+  getCorsHeaders,
+} from "@/lib/http/cors";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, PATCH, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+const corsOptions = {
+  methods: "GET, PATCH, DELETE, OPTIONS",
 };
 
 type RouteContext = {
@@ -18,14 +20,11 @@ type RouteContext = {
   }>;
 };
 
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: corsHeaders,
-  });
+export async function OPTIONS(request: Request) {
+  return corsOptionsResponse(request, corsOptions);
 }
 
-export async function GET(_request: Request, context: RouteContext) {
+export async function GET(request: Request, context: RouteContext) {
   const { id } = await context.params;
   const palette = await getPalette(id);
 
@@ -34,7 +33,7 @@ export async function GET(_request: Request, context: RouteContext) {
       error: "Palette was not found.",
     }, {
       status: 404,
-      headers: corsHeaders,
+      headers: getCorsHeaders(request, corsOptions),
     });
   }
 
@@ -42,7 +41,7 @@ export async function GET(_request: Request, context: RouteContext) {
     palette,
   }, {
     headers: {
-      ...corsHeaders,
+      ...getCorsHeaders(request, corsOptions),
       "x-spectro-storage": getPaletteStorageDriver(),
     },
   });
@@ -59,7 +58,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         error: "Palette name is required.",
       }, {
         status: 400,
-        headers: corsHeaders,
+        headers: getCorsHeaders(request, corsOptions),
       });
     }
 
@@ -69,7 +68,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     return Response.json(response, {
       headers: {
-        ...corsHeaders,
+        ...getCorsHeaders(request, corsOptions),
         "x-spectro-storage": getPaletteStorageDriver(),
       },
     });
@@ -78,12 +77,12 @@ export async function PATCH(request: Request, context: RouteContext) {
       error: error instanceof Error ? error.message : "Palette could not be renamed.",
     }, {
       status: 400,
-      headers: corsHeaders,
+      headers: getCorsHeaders(request, corsOptions),
     });
   }
 }
 
-export async function DELETE(_request: Request, context: RouteContext) {
+export async function DELETE(request: Request, context: RouteContext) {
   try {
     const { id } = await context.params;
 
@@ -92,7 +91,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
     return new Response(null, {
       status: 204,
       headers: {
-        ...corsHeaders,
+        ...getCorsHeaders(request, corsOptions),
         "x-spectro-storage": getPaletteStorageDriver(),
       },
     });
@@ -101,7 +100,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
       error: error instanceof Error ? error.message : "Palette could not be deleted.",
     }, {
       status: 400,
-      headers: corsHeaders,
+      headers: getCorsHeaders(request, corsOptions),
     });
   }
 }

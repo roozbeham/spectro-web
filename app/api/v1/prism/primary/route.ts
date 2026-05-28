@@ -3,16 +3,18 @@ import {
   getRandomSpectroPrismSafePrimaryHex,
   getSpectroPrismPrimaryThemeAdjustment,
 } from "@/lib/engine/spectro-prism";
+import {
+  corsOptionsResponse,
+  getCorsHeaders,
+} from "@/lib/http/cors";
 
 export const runtime = "edge";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+const corsOptions = {
+  methods: "GET, POST, OPTIONS",
 };
 
-export async function GET() {
+export async function GET(request: Request) {
   return Response.json({
     message: "This endpoint is working, but it needs a POST request to analyze a primary color.",
     endpoint: "POST /api/v1/prism/primary",
@@ -20,14 +22,11 @@ export async function GET() {
       hex: "#35ADE9",
       theme: "dark",
     },
-  }, { headers: corsHeaders });
+  }, { headers: getCorsHeaders(request, corsOptions) });
 }
 
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: corsHeaders,
-  });
+export async function OPTIONS(request: Request) {
+  return corsOptionsResponse(request, corsOptions);
 }
 
 export async function POST(request: Request) {
@@ -41,7 +40,7 @@ export async function POST(request: Request) {
   if (body.intent === "safe-zone-random") {
     return Response.json({
       hex: getRandomSpectroPrismSafePrimaryHex(body.excludedHex || body.hex),
-    }, { headers: corsHeaders });
+    }, { headers: getCorsHeaders(request, corsOptions) });
   }
 
   const analysis = analyzeSpectroPrismPrimaryColor(body.hex, body.theme);
@@ -50,5 +49,5 @@ export async function POST(request: Request) {
   return Response.json({
     analysis,
     adjustment,
-  }, { headers: corsHeaders });
+  }, { headers: getCorsHeaders(request, corsOptions) });
 }

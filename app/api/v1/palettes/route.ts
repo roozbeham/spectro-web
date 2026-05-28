@@ -8,31 +8,30 @@ import {
   listPalettes,
   saveGeneratedPalette,
 } from "@/lib/storage/palette-repository";
+import {
+  corsOptionsResponse,
+  getCorsHeaders,
+} from "@/lib/http/cors";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+const corsOptions = {
+  methods: "GET, POST, OPTIONS",
 };
 
-export async function GET() {
+export async function GET(request: Request) {
   const response: PaletteListResponse = {
     palettes: await listPalettes(),
   };
 
   return Response.json(response, {
     headers: {
-      ...corsHeaders,
+      ...getCorsHeaders(request, corsOptions),
       "x-spectro-storage": getPaletteStorageDriver(),
     },
   });
 }
 
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: corsHeaders,
-  });
+export async function OPTIONS(request: Request) {
+  return corsOptionsResponse(request, corsOptions);
 }
 
 export async function POST(request: Request) {
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
         error: "Missing palette.",
       }, {
         status: 400,
-        headers: corsHeaders,
+        headers: getCorsHeaders(request, corsOptions),
       });
     }
 
@@ -55,7 +54,7 @@ export async function POST(request: Request) {
     return Response.json(response, {
       status: 201,
       headers: {
-        ...corsHeaders,
+        ...getCorsHeaders(request, corsOptions),
         "x-spectro-storage": getPaletteStorageDriver(),
       },
     });
@@ -64,7 +63,7 @@ export async function POST(request: Request) {
       error: error instanceof Error ? error.message : "Palette could not be saved.",
     }, {
       status: 400,
-      headers: corsHeaders,
+      headers: getCorsHeaders(request, corsOptions),
     });
   }
 }

@@ -47,6 +47,7 @@ export type GeneratedPalette = {
   settings: Record<string, unknown>;
   source: PaletteSource;
   prism?: unknown;
+  neutralAdjustment?: unknown;
 };
 
 export type GeneratePaletteResponse = {

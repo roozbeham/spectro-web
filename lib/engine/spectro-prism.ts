@@ -1,3 +1,5 @@
+import "server-only";
+
 import { normalizeHex } from "@/lib/contracts/palette";
 
 export type SpectroPrismTheme = "light" | "dark";

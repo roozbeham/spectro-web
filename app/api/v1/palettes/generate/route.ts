@@ -1,4 +1,8 @@
 import { generatePalette } from "@/lib/engine/generate-palette";
+import {
+  corsOptionsResponse,
+  getCorsHeaders,
+} from "@/lib/http/cors";
 import type {
   GeneratePaletteRequest,
   GeneratePaletteResponse,
@@ -9,11 +13,9 @@ import {
   normalizePaletteSource,
 } from "@/lib/contracts/palette";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Expose-Headers": "X-Spectro-Cache",
+const corsOptions = {
+  methods: "GET, POST, OPTIONS",
+  exposeHeaders: "X-Spectro-Cache",
 };
 const paletteResponseCache = new Map<string, {
   expiresAt: number;
@@ -97,17 +99,17 @@ function rememberPaletteResponse(cacheKey: string, response: GeneratePaletteResp
   }
 }
 
-function jsonPaletteResponse(response: GeneratePaletteResponse, cacheStatus: string) {
+function jsonPaletteResponseForRequest(request: Request, response: GeneratePaletteResponse, cacheStatus: string) {
   return Response.json(response, {
     headers: {
-      ...corsHeaders,
+      ...getCorsHeaders(request, corsOptions),
       "Cache-Control": "no-store",
       "X-Spectro-Cache": cacheStatus,
     },
   });
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   return Response.json({
     message: "This endpoint is working, but it needs a POST request to generate a palette.",
     endpoint: "POST /api/v1/palettes/generate",
@@ -117,14 +119,11 @@ export async function GET() {
       mode: "neutral",
       source: "figma",
     },
-  }, { headers: corsHeaders });
+  }, { headers: getCorsHeaders(request, corsOptions) });
 }
 
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: corsHeaders,
-  });
+export async function OPTIONS(request: Request) {
+  return corsOptionsResponse(request, corsOptions);
 }
 
 export async function POST(request: Request) {
@@ -133,12 +132,12 @@ export async function POST(request: Request) {
   const cachedResponse = getCachedPaletteResponse(cacheKey);
 
   if (cachedResponse) {
-    return jsonPaletteResponse(cachedResponse, "HIT");
+    return jsonPaletteResponseForRequest(request, cachedResponse, "HIT");
   }
 
   const pendingResponse = pendingPaletteResponses.get(cacheKey);
   if (pendingResponse) {
-    return jsonPaletteResponse(await pendingResponse, "DEDUPED");
+    return jsonPaletteResponseForRequest(request, await pendingResponse, "DEDUPED");
   }
 
   const responsePromise = Promise.resolve().then(() => {
@@ -156,7 +155,7 @@ export async function POST(request: Request) {
   try {
     const response = await responsePromise;
 
-    return jsonPaletteResponse(response, "MISS");
+    return jsonPaletteResponseForRequest(request, response, "MISS");
   } finally {
     pendingPaletteResponses.delete(cacheKey);
   }

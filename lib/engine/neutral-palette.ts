@@ -1,3 +1,5 @@
+import "server-only";
+
 import {
   createColorData,
   type GeneratePaletteRequest,
@@ -5,6 +7,10 @@ import {
 } from "@/lib/contracts/palette";
 
 const SCALE_SPECTRUM_SIZE = 160;
+const HEX_NEUTRAL_BASE_SATURATION_MAX = 24;
+const HEX_NEUTRAL_EXTREME_LIGHTNESS_SATURATION_BONUS = 36;
+const HEX_NEUTRAL_BASE_OKLAB_CHROMA_MAX = 0.045;
+const HEX_NEUTRAL_EXTREME_LIGHTNESS_OKLAB_CHROMA_BONUS = 0.058;
 
 const DEFAULT_SETTINGS = {
   hue: 220,
@@ -46,6 +52,14 @@ type CurvePoint = {
 export type NeutralPaletteResult = {
   colors: string[];
   colorData: ReturnType<typeof createColorData>;
+};
+
+export type NeutralHexAdjustment = {
+  engine: "spectro-neutral";
+  role: "neutral";
+  originalHex: string;
+  adjustedHex: string;
+  message: string;
 };
 
 function clamp(value: number, min: number, max: number): number {
@@ -332,6 +346,95 @@ function hslToHex(hue: number, saturation: number, lightness: number): string {
     .toUpperCase()
     .padStart(6, "0")
     .replace(/^/, "#");
+}
+
+function srgbChannelToLinear(channel: number): number {
+  const value = clamp(channel, 0, 255) / 255;
+  return value <= 0.04045
+    ? value / 12.92
+    : ((value + 0.055) / 1.055) ** 2.4;
+}
+
+function rgbToOklabChroma(red: number, green: number, blue: number): number {
+  const linearRed = srgbChannelToLinear(red);
+  const linearGreen = srgbChannelToLinear(green);
+  const linearBlue = srgbChannelToLinear(blue);
+  const longCone = 0.4122214708 * linearRed + 0.5363325363 * linearGreen + 0.0514459929 * linearBlue;
+  const mediumCone = 0.2119034982 * linearRed + 0.6806995451 * linearGreen + 0.1073969566 * linearBlue;
+  const shortCone = 0.0883024619 * linearRed + 0.2817188376 * linearGreen + 0.6299787005 * linearBlue;
+  const longRoot = Math.cbrt(longCone);
+  const mediumRoot = Math.cbrt(mediumCone);
+  const shortRoot = Math.cbrt(shortCone);
+  const a = 1.9779984951 * longRoot - 2.428592205 * mediumRoot + 0.4505937099 * shortRoot;
+  const b = 0.0259040371 * longRoot + 0.7827717662 * mediumRoot - 0.808675766 * shortRoot;
+
+  return Math.sqrt(a * a + b * b);
+}
+
+function getLightnessExtremity(lightness: number): number {
+  return Math.abs(clamp(lightness, 0, 100) - 50) / 50;
+}
+
+function getHexNeutralProfile(hex: string): {
+  hsl: ReturnType<typeof rgbToHsl>;
+  saturationMax: number;
+  oklabChroma: number;
+  oklabChromaMax: number;
+} | null {
+  const rgb = hexToRgb(hex);
+  const hsl = rgb ? rgbToHsl(rgb.red, rgb.green, rgb.blue, 0) : null;
+
+  if (!rgb || !hsl) {
+    return null;
+  }
+
+  const lightnessExtremity = getLightnessExtremity(hsl.lightness);
+
+  return {
+    hsl,
+    saturationMax: HEX_NEUTRAL_BASE_SATURATION_MAX
+      + HEX_NEUTRAL_EXTREME_LIGHTNESS_SATURATION_BONUS * (lightnessExtremity ** 1.4),
+    oklabChroma: rgbToOklabChroma(rgb.red, rgb.green, rgb.blue),
+    oklabChromaMax: HEX_NEUTRAL_BASE_OKLAB_CHROMA_MAX
+      + HEX_NEUTRAL_EXTREME_LIGHTNESS_OKLAB_CHROMA_BONUS * (lightnessExtremity ** 1.2),
+  };
+}
+
+function getNeutralHexFromHex(hex: string): string {
+  const profile = getHexNeutralProfile(hex);
+  if (!profile) {
+    return "";
+  }
+
+  const hsl = profile.hsl;
+  return hslToHex(hsl.hue, Math.min(hsl.saturation, profile.saturationMax), hsl.lightness);
+}
+
+export function getNeutralHexAdjustment(hex: unknown): NeutralHexAdjustment | null {
+  const originalHex = normalizeHex(hex);
+  const profile = getHexNeutralProfile(originalHex);
+
+  if (
+    !originalHex
+    || !profile
+    || profile.hsl.saturation <= profile.saturationMax
+    || profile.oklabChroma <= profile.oklabChromaMax
+  ) {
+    return null;
+  }
+
+  const adjustedHex = getNeutralHexFromHex(originalHex);
+  if (!adjustedHex || adjustedHex === originalHex) {
+    return null;
+  }
+
+  return {
+    engine: "spectro-neutral",
+    role: "neutral",
+    originalHex,
+    adjustedHex,
+    message: "This color is not neutral. Adjust it?",
+  };
 }
 
 function getColorForPoint(point: CurvePoint, settings: NeutralSettings): string {

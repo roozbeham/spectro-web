@@ -3,11 +3,13 @@ import {
   duplicatePalette,
   getPaletteStorageDriver,
 } from "@/lib/storage/palette-repository";
+import {
+  corsOptionsResponse,
+  getCorsHeaders,
+} from "@/lib/http/cors";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+const corsOptions = {
+  methods: "POST, OPTIONS",
 };
 
 type RouteContext = {
@@ -16,14 +18,11 @@ type RouteContext = {
   }>;
 };
 
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: corsHeaders,
-  });
+export async function OPTIONS(request: Request) {
+  return corsOptionsResponse(request, corsOptions);
 }
 
-export async function POST(_request: Request, context: RouteContext) {
+export async function POST(request: Request, context: RouteContext) {
   try {
     const { id } = await context.params;
     const response: SavePaletteResponse = {
@@ -33,7 +32,7 @@ export async function POST(_request: Request, context: RouteContext) {
     return Response.json(response, {
       status: 201,
       headers: {
-        ...corsHeaders,
+        ...getCorsHeaders(request, corsOptions),
         "x-spectro-storage": getPaletteStorageDriver(),
       },
     });
@@ -42,7 +41,7 @@ export async function POST(_request: Request, context: RouteContext) {
       error: error instanceof Error ? error.message : "Palette could not be duplicated.",
     }, {
       status: 400,
-      headers: corsHeaders,
+      headers: getCorsHeaders(request, corsOptions),
     });
   }
 }

@@ -1,3 +1,5 @@
+import "server-only";
+
 import {
   type GeneratedPalette,
   type GeneratePaletteRequest,
@@ -5,7 +7,10 @@ import {
   normalizePaletteMode,
   normalizePaletteSource,
 } from "@/lib/contracts/palette";
-import { generateNeutralPalette } from "@/lib/engine/neutral-palette";
+import {
+  generateNeutralPalette,
+  getNeutralHexAdjustment,
+} from "@/lib/engine/neutral-palette";
 import { generateStatusPalette } from "@/lib/engine/status-palette";
 import { getSpectroPrismPrimaryThemeAdjustment } from "@/lib/engine/spectro-prism";
 
@@ -42,5 +47,6 @@ export function generatePalette(input: GeneratePaletteRequest): GeneratedPalette
     colorData: generated.colorData,
     settings: input.settings || {},
     source,
+    neutralAdjustment: getNeutralHexAdjustment(seedHex),
   };
 }
