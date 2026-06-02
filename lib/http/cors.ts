@@ -6,6 +6,8 @@ const DEFAULT_ALLOWED_ORIGINS = [
   "https://figma.com",
   "https://www.figma.com",
   "http://localhost:3000",
+  // Figma plugin sandbox requests can arrive with an opaque origin.
+  "null",
 ];
 
 type CorsOptions = {
