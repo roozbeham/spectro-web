@@ -26,15 +26,23 @@ export default function Home() {
               SPECTRO
             </span>
           </Link>
-          <a
-            className="flex items-center gap-2 text-sm font-medium text-white/95 transition hover:text-white"
-            href={FIGMA_PLUGIN_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span>Figma Plugin</span>
-            <img alt="" className="h-4 w-4" src="/landing/external-link.svg" />
-          </a>
+          <nav className="flex items-center gap-5">
+            <Link
+              className="text-sm font-medium text-white/82 transition hover:text-white"
+              href="/docs"
+            >
+              Docs
+            </Link>
+            <a
+              className="flex items-center gap-2 text-sm font-medium text-white/95 transition hover:text-white"
+              href={FIGMA_PLUGIN_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>Figma Plugin</span>
+              <img alt="" className="h-4 w-4" src="/landing/external-link.svg" />
+            </a>
+          </nav>
         </header>
 
         <section className="flex min-h-0 flex-1 flex-col items-center overflow-hidden pt-[clamp(10px,4.45vh,40px)]">
