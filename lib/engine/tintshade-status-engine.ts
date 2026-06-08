@@ -12,7 +12,7 @@ const SETTING_CONFIGS = {
 
 let hexAnchor = null;
 let hexInput = null;
-let isHexLocked = true;
+let isHexLocked = false;
 let tintShadeNewStatusRefreshSeed = 0;
 let tintShadeNewColorSystemCacheKey = '';
 let tintShadeNewColorSystemCache = null;
@@ -2936,7 +2936,24 @@ function getTintShadeNewAnchorToneStop(toneStops, anchorProfile) {
   }
 
   const anchorIndex = getColorSystemAvailableToneSourceIndex(toneStops, familyMatch.sourceIndex);
-  return toneStops.find((toneStop) => toneStop.sourceIndex === anchorIndex) || toneStops[0];
+  const automaticAnchorToneStop = toneStops.find((toneStop) => toneStop.sourceIndex === anchorIndex) || toneStops[0];
+
+  if (!isHexLocked || toneStops.length <= 1) {
+    return automaticAnchorToneStop;
+  }
+
+  const automaticPosition = toneStops.indexOf(automaticAnchorToneStop);
+  const lowerMiddlePosition = Math.floor((toneStops.length - 1) / 2);
+  const upperMiddlePosition = Math.ceil((toneStops.length - 1) / 2);
+
+  if (automaticPosition >= lowerMiddlePosition && automaticPosition <= upperMiddlePosition) {
+    return automaticAnchorToneStop;
+  }
+
+  const nearestMiddlePosition = automaticPosition < lowerMiddlePosition
+    ? lowerMiddlePosition
+    : upperMiddlePosition;
+  return toneStops[nearestMiddlePosition] || automaticAnchorToneStop;
 }
 
 function getTintShadeNewToneTemplate(anchorProfile, toneStop) {
@@ -3006,6 +3023,7 @@ function getTintShadeNewColorSystemCacheKey(pointCount) {
   return [
     clamp(Math.round(pointCount), 2, COLOR_SYSTEM_TONES.length),
     getTintShadeAnchorHex(),
+    isHexLocked,
     tintShadeNewStatusRefreshSeed,
   ].join("|");
 }
@@ -3637,7 +3655,7 @@ function getStatusStepCount(input) {
 function getStatusHexLock(input) {
   const settings = readRecord(input && input.settings);
   const hex = readRecord(settings.hex);
-  return hex.locked !== false;
+  return Boolean(hex.locked);
 }
 
 function getStatusRefreshSeed(input) {
